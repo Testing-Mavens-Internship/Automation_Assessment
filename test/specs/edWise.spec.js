@@ -166,9 +166,7 @@ describe('To verify workflow of EdWise website', () => {
 
     it('Click on "Add Relationships" button validate warning messages', async () => {
         await changeReqPage.clickAddRelationshipsButton()
-        // expect(await changeReqPage.$addRelationshipButton()
-        // .isDisplayed()).withContext('Expect "Add Relationships" button is not present')
-        // .toBeTrue()
+        //validate warnings
     })
 
 })
