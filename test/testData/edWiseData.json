@@ -1,0 +1,10 @@
+{
+    "timeout":"3000",
+
+    "configMenuElements":["Select User","Role Permission","User Roles","Section Configurations"],
+
+    "selectPageDropDowns":["Select User","Select Role"]
+
+    
+
+}
