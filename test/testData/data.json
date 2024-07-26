@@ -1,0 +1,10 @@
+{
+    "options": ["Select User", "Role Permission", "User Roles", "Section Configurations"],
+    "count": 4,
+    "timeOutMin" : 3000,
+    "timeoutMedium" : 5000,
+    "timeoutMax" : 1000,
+    "select": "Select User",
+    "role": "Select Role",
+    "name" : "Sachin"
+}
