@@ -18,16 +18,16 @@ describe("End to end flow of Edwise web application", () => {
   it("Click on configurations menu", async () => {
     await landingPageObj.$configurationsMenu().click();
     let arr = ["Select User","Role Permission","User Roles","Section Configurations"];
-    // for (let i = 0; i < arr.length; i++) {
-    //   expect(
-    //     await landingPageObj
-    //       .$configurationsMenuOptions(arr[i])
-    //       .isDisplayed({
-    //         timeout: 10000,
-    //         timeoutMsg: "landing page header not displayed",
-    //       })
-    //   ).toBe(true);
-    // }
+    for (let i = 0; i < arr.length; i++) {
+      expect(
+        await landingPageObj
+          .$configurationsMenuOptions(arr[i])
+          .isDisplayed({
+            timeout: 10000,
+            timeoutMsg: "landing page header not displayed",
+          })
+      ).toBe(true);
+    }
   });
   it("Select the select user option from the Configurations menu", async () => {
     await landingPageObj.$configurationsMenuOptions().click();
