@@ -11,6 +11,10 @@ class ChangeRequest extends CommonPage{
             this.$selectCategory=()=>$(`//li[@aria-label="Charter Authorizer"]`);
             this.$change=()=>$(`(//div[@class="rz-radiobutton"])[2]`);
             this.$validateChange=()=>$(`//div[@class="rz-radiobutton-box rz-state-active"]`);
+            this.$calendarIcon=()=>$(`//span[@class="rz-button-icon-left rzi rzi-calendar"]`);
+            this.$$currentDates=()=>$$(`//span[@class="rz-state-default"]`);
+            this.$$previousDates=()=>$$(`//span[@class="rz-state-default rz-state-disabled"]`);
+            this.$$nextMonthDates=()=>$$(`//span[@class="rz-state-default rz-datepicker-other-month"]`);
 
     }
 
@@ -57,8 +61,31 @@ class ChangeRequest extends CommonPage{
      */
     async validateChange(){
        const change = await this.$validateChange().getAttribute();
-       expect(await change(toContain('active')));
+       await expect(change).toHaveAttribute('active');
     }
+
+    /**
+     * To validate changes in calendar
+     */
+    async validateCalender(){
+        await this.$calendarIcon().click();
+        const previousCount = await this.$$previousDates().length;
+        const previousDates =[];
+        const currentCount = await this.$$currentDates().length;
+        const currentDates =[];
+        const nextMonthCount = await this.$$nextMonthDates().length;
+        const nextMonthDates =[];
+        for(let i = 0;i<previousCount;i++){
+            previousDates= await this.$$previousDates[i].getAttribute();
+        }
+         if(previousDates.toHaveAttribute('state-disabled')){
+            return true;
+         }
+         else{
+            return false;
+         }
+        }
+
 }
 
 export default new ChangeRequest();
