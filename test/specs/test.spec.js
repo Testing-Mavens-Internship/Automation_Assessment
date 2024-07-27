@@ -1,185 +1,115 @@
-import landingPage from "../pageobjects/edwise/landingPage.js";
-import selectUserPage from "../pageobjects/edwise/selectUserPage.js";
-import changeRequestPage from "../pageobjects/edwise/changeRequestPage.js";
-import data from "../../testData/data.json" assert { type: "json" };
+import landingPage from "../pageobjects/landingPage.js"
+import data from "../../testData/data.json" assert{type:"json"}
+import selectUserPage from "../pageobjects/selectUserPage.js";
+import ChangeRequestPage from "../pageobjects/ChangeRequestPage.js";
+import addRequestPage from "../pageobjects/addRequestPage.js";
 
-describe("Verifying the functionality of end to end flow of 'EdWise' application", () => {
-  it("Launch the url of 'EdWise' application in the browser", async () => {
-    await landingPage.launchUrl();
-    await landingPage
-      .$usernameLabel()
-      .waitForDisplayed({
-        timeout: data.times.timeout,
-        timeoutMsg: "username label is still not displayed",
-      });
-    expect(await landingPage.$usernameLabel().isDisplayed())
-      .withContext("username label is not displayed")
-      .toBeTrue();
-  });
+describe("Verifying the end to end flow of 'EdWise' application",()=>{
+    it("Launch the url of 'EdWise' application in the browser",async()=>{
+        await landingPage.launchUrl();
+        expect (await landingPage.$usernameHeader().isDisplayed()).withContext("Header is not displayed").toBeTrue()
+    })
 
-  it("Click on the 'configurations' option and validate four sub options are displayed", async () => {
-    await landingPage.clickConfigurations();
-    let list = await landingPage.configurationsDropdownSelection();
-    let compareList = [
-      "Select User",
-      "Role Permission",
-      "User Roles",
-      "Section Configurations",
-    ];
-    expect(list).toContains(compareList);
-  });
+    it("Click on 'Configurations' and validate all items in the dropdown list",async()=>{
+        await landingPage.$loader().waitForDisplayed({timeout:data.timeout,reverse:true,timeoutMsg:"loader still displayed"})
+        await landingPage.clickConfigurations()
+        let list= await landingPage.validateConfigurationsList()
+        for(let item of list){
+            expect(data.configurations).toContain(item)
+        }
+    })
 
-  it("Click select user from the dropdown list", async () => {
-    await landingPage.clickSelectUser();
-    await selectUserPage
-      .$selectUserPlaceholder("mZFqsm2aWk", "Select User")
-      .waitForDisplayed({
-        timeout: data.times.timeout,
-        timeoutMsg: "Select User is still not displayed",
-      });
-    await selectUserPage
-      .$selectUserPlaceholder("6DpMa9wHv0", "Select Role")
-      .waitForDisplayed({
-        timeout: data.times.timeout,
-        timeoutMsg: "Select Role is still not displayed",
-      });
-    expect(
-      await selectUserPage
-        .$selectUserPlaceholder("mZFqsm2aWk", "Select User")
-        .isDisplayed()
-    )
-      .withContext("Select User is not displayed")
-      .toBeTrue();
-    expect(
-      await selectUserPage
-        .$selectUserPlaceholder("6DpMa9wHv0", "Select Role")
-        .isDisplayed()
-    )
-      .withContext("Select Role is not displayed")
-      .toBeTrue();
-  });
+    it("Click on 'Select User' menu",async()=>{
+        await landingPage.clickSelectUser()
+        await selectUserPage.$selectUserLabel().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Label still not displayed"})
+        await selectUserPage.$selectRoleLabel().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Label still not displayed"})
+        expect (await selectUserPage.$selectUserLabel().isDisplayed()).withContext("Label is not displayed").toBeTrue()
+        expect (await selectUserPage.$selectRoleLabel().isDisplayed()).withContext("Label is not displayed").toBeTrue()
+    })
 
-  it("Click on select user", async () => {
-    await selectUserPage.selectUser();
-    expect(
-      await selectUserPage
-        .$selectDataOption("popup-y964vaLN60", "Sachin")
-        .isDisplayed()
-    )
-      .withContext("Option sachin is not displayed")
-      .toBeTrue();
-  });
+    it("Click on 'Select User' input field",async()=>{
+        let sachinOption=await selectUserPage.clickSelectUserInput()
+        expect(sachinOption).toEqual("Sachin")
+    })
 
-  it("Select option 'sachin'", async () => {
-    await selectUserPage.selectSachin();
-    expect(
-      await selectUserPage.$selectUserPlaceholder("6DpMa9wHv0", "Select Role"),
-      isDisplayed()
-    )
-      .withContext("Select role option is not displayed")
-      .toBeTrue();
-  });
+    it("Click on option 'Sachin'",async()=>{
+        await selectUserPage.clickOptionSachin()
+        await selectUserPage.$loader().waitForDisplayed({timeout:data.timeout,reverse:true,timeoutMsg:"Loader still displayed"})
+        await selectUserPage.$selectRoleLabel().waitForDisplayed({timeout:data.timeout,timeoutMsg:"select Role label still not displayed"})
+        expect(await selectUserPage.$selectRoleLabel().isDisplayed()).withContext("Select Role is not displayed ").toBeTrue()
+    })
 
-  it("Click on select role", async () => {
-    await selectUserPage.selectUserRole();
-    expect(
-      await selectUserPage
-        .$selectDataOption("popup-7ZcuhPwg2U", "LEA_Data_Admin")
-        .isDisplayed()
-    )
-      .withContext("LEA_Data_Admin option is not displayed")
-      .toBeTrue();
-  });
+    it("Click on 'Select Role' input field",async()=>{
+        let LEA_Data_Admin=await selectUserPage.clickSelectRoleInput()
+        expect(LEA_Data_Admin).toEqual("LEA_Data_Admin")
+    })
 
-  it("Select option 'LEA_Data_Admin'", async () => {
-    await selectUserPage.selectLEADataAdmin();
-    expect(await selectUserPage.$selectButton().isDisplayed())
-      .withContext("Select button is not displayed")
-      .toBeTrue();
-  });
+    it("Select option 'LEA_Data_Admin'",async()=>{
+        await selectUserPage.clickOptionEA_Data_Admin()
+        expect(await selectUserPage.$selectButton().isDisplayed()).withContext("Button is not displayed").toBeTrue()
+    })
 
-  it("Click on select button", async () => {
-    await selectUserPage.clickSelectButton();
-    await changeRequestPage
-      .$addRequestOption()
-      .waitForDisplayed({
-        timeout: data.times.timeout,
-        timeoutMsg: "Add request option is still not displayed",
-      });
-    await changeRequestPage
-      .$approvalOption()
-      .waitForDisplayed({
-        timeout: data.times.timeout,
-        timeoutMsg: "Approval option is still not displayed",
-      });
-    await changeRequestPage
-      .$labelSachin()
-      .waitForDisplayed({
-        timeout: data.times.timeout,
-        timeoutMsg: "label sachin is still not displayed",
-      });
-    expect(await changeRequestPage.$addRequestOption().isDisplayed())
-      .withContext("Add request option is not displayed")
-      .toBeTrue();
-    expect(await changeRequestPage.$approvalOption().isDisplayed())
-      .withContext("Approval option is not displayed")
-      .toBeTrue();
-    expect(await changeRequestPage.$labelSachin().isDisplayed()).withContext(
-      "label sachin is not displayed"
-    ),
-      toBeTrue();
-  });
+    it("Click on 'Select' button",async()=>{
+        await selectUserPage.clickSelectButton()
+        await selectUserPage.$loader().waitForDisplayed({timeout:data.timeout,reverse:true,timeoutMsg:"Loader still displayed"})
+        await ChangeRequestPage.$loader().waitForDisplayed({timeout:data.timeout,reverse:true,timeoutMsg:"Loader still displayed"})
+        await ChangeRequestPage.$usernameHeader().waitForDisplayed({timeout:data.timeout,timeoutMsg:"username header still not displayed"})
+        await ChangeRequestPage.$addRequestMenu().waitForDisplayed({timeout:data.timeout,timeoutMsg:"label still not displayed"})
+        await ChangeRequestPage.$approvalMenu().waitForDisplayed({timeout:data.timeout,timeoutMsg:"label still not displayed"})
+        let addRequest=await ChangeRequestPage.$addRequestMenu().getText()
+        let approval=await ChangeRequestPage.$approvalMenu().getText()
+        expect(await ChangeRequestPage.$usernameHeader().isDisplayed()).withContext("Header is not displayed").toBeTrue()
+        expect(data.changeRequest).toContain(addRequest)
+        expect(data.changeRequest).toContain(approval)
+    })
 
-  it("Click on add request button", async () => {
-    await changeRequestPage.clickAddRequestButton();
-    expect(await changeRequestPage.$educationOrganizationLabel().isDisplayed())
-      .withContext("label is not displayed")
-      .toBeTrue();
-    expect(await changeRequestPage.$categoryLabel().isDisplayed())
-      .withContext("label is not displayed")
-      .toBeTrue();
-    expect(await changeRequestPage.$effectiveDateLabel().isDisplayed())
-      .withContext("label is not displayed")
-      .toBeTrue();
-  });
+    it("Click on add request button and validate all the labels",async()=>{
+        await ChangeRequestPage.clickAddRequestButton()
+        let filterLabels=await addRequestPage.validateSearchFilterLabels()
+        for(let item of filterLabels){
+            expect(data.filterLabels).toContain(item)
+        }
+    })
 
-  it("Click on select education organization",async()=>{
-    await changeRequestPage.clickEducationOrganization()
-    expect(await changeRequestPage.$organizationName().isDisplayed()).withContext("Option is not displayed").toBeTrue()
-  })
+    it("Click on select education organization and validate all items in the dropdown list",async()=>{
+        let list=await addRequestPage.clickOrganization()
+        for(let item of list){
+            expect(data.educationOrganization).toContain(item)
+        }
+    })
 
-  it("Select 'Willcox Unified District' from the drop down list and validate",async()=>{
-    await changeRequestPage.selectOrganizationName()
-    expect(await changeRequestPage.$category().isDisplayed()).withContext("Option not displayed").toBeTrue()  
-  })
+    it("Select 'Willcox Unified District' option and validate organizations details cards",async()=>{
+        let list=await addRequestPage.selectOrganization()
+        for(let item of list){
+            expect(data.organizationDetails).toContain(item)
+        }
+    })
 
-  it("Click on category",async()=>{
-    await changeRequestPage.clickCategory()
-    expect(await changeRequestPage.$categoryName().isDisplayed()).withContext("Option is not displayed").toBeTrue() 
-  })
+    it("Click on select category and validate all items in the dropdown list",async()=>{
+        let list = await addRequestPage.clickCategory()
+        for(let item of list){
+            expect(data.categoryList).toContain(item)
+        }
+  
+    })
 
-  it("Select 'Charter Authorizer' from the drop down list and validate",async()=>{
-    
-  })
+    it("Select Charter Authorizer option and validate category details cards",async()=>{
+        let list = await addRequestPage.selectCategory()
+        await addRequestPage.$activeYellow().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Yellow color still not displayed"})
+        for(let item of list){
+            expect(data.categoryCards).toContain(item)
+        }
+        expect (await addRequestPage.$activeYellow().isDisplayed()).withContext("Yellow color not displayed").toBeTrue()
+    })
 
-  it("Click on future option",async()=>{
+    it("Click on future and validate calendar is enabled",async()=>{
+        await addRequestPage.selectFuture()
+        expect (await addRequestPage.$calendarIcon().isDisplayed()).withContext("Calendar is not displayed").toBeTrue()
+    })
 
-  })
-
-  it("Verify date icon is enabled",async()=>{
-
-  })
-
-  it("Click on review & submit button",async()=>{
-
-  })
-
-  it("Validate the category name",async()=>{
-
-  })
-
-  it("Click on close button",async()=>{
-
-  })
-
-});
+    it("Click on calendar",async()=>{
+        await addRequestPage.clickCalendar()
+        await addRequestPage.$calendar().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Calendar still not displayed"})
+        expect (await addRequestPage.$calendar().isDisplayed()).withContext("Calendar is not displayed").toBeTrue()
+    })
+})
