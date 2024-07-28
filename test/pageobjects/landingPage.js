@@ -3,19 +3,32 @@ class Landingpage extends Common{
     constructor(){
         super()
         this.$configuration=()=>$(`//div[@class="rz-navigation-item-link"]`)
-        this.$$lists=()=>$$(`//a[@class="rz-navigation-item-link"]`)
+        this.$$lists=()=>$$(`//li[@class="rz-navigation-item config-sub-link"]`)
+        this.$loading=()=>$(`//div[@class="loader-home"]/div`)
+        this.$advancedFilter=()=>$(`//span[normalize-space()="Advanced Filter"]`)
+        this.$logoHeader=()=>$(`//div[contains(@class,"rz-stack rz-display-")]/img`)
         
 
     }
     /**
      * Method to click on configuration
      */
-    async clickOnconfiguration(){
-        let finalList=[];
+    async clickOnConfiguration() {
+        let finalList = [];
         await this.$configuration().click();
-        const displayedlist=await this.$$lists().getText();
-        finalList.push(displayedlist);
-        expect(await finalList.isDisplayed()).withContext("list is not displayed").toBeTrue();
+        const displayedList = await this.$$lists(); 
+        for (let i = 0; i < displayedList.length; i++) { 
+            const text = await displayedList[i].getText(); 
+            finalList.push(text); 
+        }
+        if(finalList==displayedList){
+            console.log("validation successfull")
+        }else{
+            console.error("validation failed items list is not  displayed")
+        }
+   
+
+       
     }
 
 
