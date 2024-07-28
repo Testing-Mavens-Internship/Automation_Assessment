@@ -23,6 +23,12 @@ export default class Common{
         // await locator.waitForClickable({timeout:data.timeout,timeoutMsg:"Button still not clicked"})
         await locator.click()
     }
+
+    /**
+     * common method to get the dropdown list items
+     * @param {locator} locator 
+     * @returns array
+     */
     async validateDropdownList(locator){
         let list=[]
         let itemCount=await locator
