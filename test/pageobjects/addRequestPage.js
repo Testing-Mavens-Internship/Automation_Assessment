@@ -32,8 +32,9 @@ class AddRequestPage extends Common{
         this.$reasonForChange=()=>$(`(//textarea[@name="ReasonForChange"])[1]`)
         this.$uploadIcon=()=>$(`(//label[@for="docsUpload"])[1]`)
         this.$inputFile=()=>$(`(//div[contains(@class,"upload-file-sec")]//following::input[@id="docsUpload"])[1]`)
-        this.$alertPopupMeassage=()=>$(`(//div[@class="rz-dialog-content"]//p[@class="rz-dialog-alert-message"])[1]`)
+        this.$alertPopupMessage=()=>$(`(//div[@class="rz-dialog-content"]//p[@class="rz-dialog-alert-message"])[1]`)
         this.$alertOkButton=()=>$(`(//div[@class="rz-dialog-alert-buttons"]//button)[1]`)
+        this.$saveButton=()=>$(`//span[text()="Save"]/..`)
     }
 
     /**
@@ -156,21 +157,41 @@ class AddRequestPage extends Common{
         await this.clickButton(this.$organizationNameInput())
         await this.$selectedOrganizationName().waitForDisplayed({timeout:data.timeout,timeoutMsg:"option still  not displayed"})
     }
+
+    /**
+     * method to select organization name
+     */
     async selectOrganizationName(){
         await this.clickButton(this.$selectedOrganizationName())
         await this.$reasonForChange().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Textarea still not displayed"})
     }
+
+    /**
+     * method to enter reason for change
+     * @param {string} data 
+     */
     async enterReasonForChange(data){
         await this.$reasonForChange().setValue(data)
         await this.$uploadIcon().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Upload icon still not displayed"})
     }
-    // async clickUploadIcon(){
-    //     await this.clickButton(this.$uploadIcon())
-    // }
+
+    /**
+     * method to click on upload icon
+     */
+    async clickUploadIcon(){
+        await this.clickButton(this.$uploadIcon())
+    }
+    /**
+     * method to upload file
+     */
     async fileUpload(){
         let file ="D:/Automation_EdWise/Automation_Assessment/testData/test.csv"
         let  filePath=await browser.uploadFile(file)
         await this.$inputFile().setValue(filePath)
+    }
+    async clickAlertOkButton(){
+        await this.clickButton(this.$alertOkButton())
+        await this.$uploadIcon().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Icon still not displayed"})
     }
 }
 export default new AddRequestPage()

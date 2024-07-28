@@ -227,8 +227,15 @@ describe("Verifying the end to end flow of 'EdWise' application",()=>{
         expect(await addRequestPage.$uploadIcon().isDisplayed()).withContext("Upload icon not displayed")
     })
 
-    it("Upload file csv file",async()=>{
+    it("Click on upload icon and upload file csv file",async()=>{
+        await addRequestPage.clickUploadIcon()
         await addRequestPage.fileUpload()
+        await addRequestPage.$alertPopupMessage().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Alert message still not displayed"})
+        expect (await addRequestPage.$alertPopupMessage().isDisplayed()).withContext("Alert message not displayed")
     })
 
+    it("Click on OK button ",async()=>{
+        await addRequestPage.clickAlertOkButton()
+        expect(await addRequestPage.$uploadIcon().isDisplayed()).withContext("Icon not displayed")
+    })
 })
