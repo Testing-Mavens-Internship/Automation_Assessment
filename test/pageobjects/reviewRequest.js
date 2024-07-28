@@ -7,6 +7,10 @@ class ReviewRequest extends Common{
         this.$categoryValue=()=>$(`//span[text()="Charter Authorizer"]`)
         this.$closeButton=()=>$(`//span[text()=" Close"]`)
     }
+
+    /**
+     * method to click on close button
+     */
     async clickCloseButton(){
         await this.clickButton(this.$closeButton())
     }

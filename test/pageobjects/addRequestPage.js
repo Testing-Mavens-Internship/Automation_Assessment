@@ -189,6 +189,10 @@ class AddRequestPage extends Common{
         let  filePath=await browser.uploadFile(file)
         await this.$inputFile().setValue(filePath)
     }
+
+    /**
+     * method to click on OK button
+     */
     async clickAlertOkButton(){
         await this.clickButton(this.$alertOkButton())
         await this.$uploadIcon().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Icon still not displayed"})
