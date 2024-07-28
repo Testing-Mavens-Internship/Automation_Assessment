@@ -5,7 +5,6 @@ import data from "../../testData/data.json" assert{type:"json"}
 class AddRequestPage extends Common{
     constructor(){
         super()
-        this.$changeRequestHeader=()=>$(`//span[text()="Change Requests"]`)
         this.$$searchFilterLabels=()=>$$(`//div[@class="add-request-search-filters"]//child::div[contains(@class,"search-education-title")]//child::span`)
         this.$organization=()=>$(`//label[text()="Select Education Organization"]`)
         this.$category=()=>$(`//span[text()="Category"]/..//following-sibling::div`)
@@ -19,6 +18,22 @@ class AddRequestPage extends Common{
         this.$activeYellow=()=>$(`//div[@class="add-request-card progress-active-sections"]`)
         this.$calendarIcon=()=>$(`//span[@class="rz-calendar rz-calendar-w-btn"]`)
         this.$calendar=()=>$(`//div[@class="rz-datepicker-group"]`)
+        this.$pickDate=(date)=>$(`//td[not(contains(@class, 'rz-datepicker-other-month'))]//span[not(contains(@class, 'rz-state-disabled')) and text()="${date}"]`)
+        this.$inputSelector=()=>$(`#DatePickerDateOnlyType`)
+        this.$organizationCategories=()=>$(`//p[text()="Organization Categories"]/../..`)
+        this.$relationshipOption=()=>$(`//p[text()="Relationships"]/../..`)
+        this.$addRelationshipButton=()=>$(`//span[normalize-space()="Add Relationship"]/..`)
+        this.$$warningMessages=()=>$$(`//div[contains(@class,"rz-messages-error")]`)
+        this.$relationshipTypeInput=()=>$(`(//div[@class="relationships-form-select"]//child::div)[1]`)
+        this.$authorizesOption=()=>$(`//div//ul//li//span[text()="Authorizes"]`)
+        this.$loader=()=>$(`//div[@class="loader-home form-loading custom-loading"]//div[@class="lds-spinner"]`)
+        this.$organizationNameInput=()=>$(`(//div[@class="relationships-form-select"]//child::div)[4]`)
+        this.$selectedOrganizationName=()=>$(`//div//ul//li[@aria-label="Arizonans For Children - East Valley Cen"]`)
+        this.$reasonForChange=()=>$(`(//textarea[@name="ReasonForChange"])[1]`)
+        this.$uploadIcon=()=>$(`(//label[@for="docsUpload"])[1]`)
+        this.$inputFile=()=>$(`(//div[contains(@class,"upload-file-sec")]//following::input[@id="docsUpload"])[1]`)
+        this.$alertPopupMeassage=()=>$(`(//div[@class="rz-dialog-content"]//p[@class="rz-dialog-alert-message"])[1]`)
+        this.$alertOkButton=()=>$(`(//div[@class="rz-dialog-alert-buttons"]//button)[1]`)
     }
 
     /**
@@ -87,9 +102,75 @@ class AddRequestPage extends Common{
         await this.clickButton(this.$calendarIcon())
     }
 
-    async selectDate(){
-
+    /***
+     * method to select a date from the calendar
+     */
+    async selectDate(date){
+        await this.clickButton(await this.$pickDate(date))
+        let day = await this.$inputSelector().getValue();
+        return day
     }
 
+    /**
+     * method to click on organization categories
+     */
+    async clickOrganizationCategories(){
+        await this.clickButton(this.$organizationCategories())
+    }
+
+    /**
+     * method to click on relationship 
+     */
+    async clickRelationshipOption(){
+        await this.clickButton(this.$relationshipOption())
+    }
+
+    /**
+     * method to click on add relationship button
+     * @returns array
+     */
+    async clickAddRelationshipButton(){
+        await this.clickButton(this.$addRelationshipButton())
+        let warnings = await this.validateDropdownList(this.$$warningMessages())
+        return warnings
+    }
+    /**
+     * method to click on relationship type input field
+     */
+    async clickRelationshipTypeInput(){
+        await this.clickButton(this.$relationshipTypeInput())
+        await this.$authorizesOption().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Option still not displayed"})
+    }
+
+    /**
+     * method to select the authorizes option
+     */
+    async selectAuthorizes(){
+        await this.clickButton(this.$authorizesOption())
+    }
+
+    /**
+     * method to click on organization name input field
+     */
+    async clickOrganizationNameInput(){
+        await this.clickButton(this.$organizationNameInput())
+        await this.$selectedOrganizationName().waitForDisplayed({timeout:data.timeout,timeoutMsg:"option still  not displayed"})
+    }
+    async selectOrganizationName(){
+        await this.clickButton(this.$selectedOrganizationName())
+        await this.$reasonForChange().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Textarea still not displayed"})
+    }
+    async enterReasonForChange(data){
+        await this.$reasonForChange().setValue(data)
+        await this.$uploadIcon().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Upload icon still not displayed"})
+    }
+    // async clickUploadIcon(){
+    //     await this.clickButton(this.$uploadIcon())
+    // }
+    async fileUpload(){
+        let file ="D:/Automation_EdWise/Automation_Assessment/testData/test.csv"
+        let  filePath=await browser.uploadFile(file)
+        await this.$inputFile().setValue(filePath)
+    }
 }
 export default new AddRequestPage()
