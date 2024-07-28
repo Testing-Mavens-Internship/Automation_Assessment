@@ -21,7 +21,7 @@ export const config = {
     // of the config file unless it's absolute.
     //
     specs: [
-        './test/specs/edWise.spec.js'
+        './test/specs/edWiseRe.spec.js'
     ],
     // Patterns to exclude.
     exclude: [
@@ -50,8 +50,11 @@ export const config = {
     // https://saucelabs.com/platform/platform-configurator
     //
     capabilities: [{
-        browserName: 'chrome'
+        browserName: 'chrome',
+        browserVersion: '120',
+        acceptInsecureCerts: true
     }],
+   
 
     //
     // ===================
@@ -128,14 +131,14 @@ export const config = {
     // Options to be passed to Jasmine.
     jasmineOpts: {
         // Jasmine default timeout
-        defaultTimeoutInterval: 60000,
+        defaultTimeoutInterval: 12000,
         //
         // The Jasmine framework allows interception of each assertion in order to log the state of the application
         // or website depending on the result. For example, it is pretty handy to take a screenshot every time
         // an assertion fails.
         expectationResultHandler: function(passed, assertion) {
-            // do something
-        }
+            if (!passed)debugger
+            }
     },
 
     //
