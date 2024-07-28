@@ -18,5 +18,8 @@ async clickElementButton($element){
     await $element.click();
 }
 
+async waitForElement($element){
+    await $element.waitForDisplayed({timeout: 10000, timeoutMsg: "Element not displayed"});  }
+
 
 }

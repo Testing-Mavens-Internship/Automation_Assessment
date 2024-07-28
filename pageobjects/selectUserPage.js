@@ -4,9 +4,9 @@ class SelectUserPage extends CommonPage{
     constructor(){
         super()
         this.$selectUserDropDownsPlaceholders = (placeholdervalue)=> $(`(//div[@class="rz-dropdown"]/child::label[text()="${placeholdervalue}"])[1]`);
-        this.$selectUserDropDownOptions = (option)=> $(`(//ul[@role="listbox"]//li[@aria-label='${option}'])[1]`);
-        this.$selectRoleDropDownOptions = (option)=> $(`//div[@id='popup-oZs3Ji-j1E']//li[contains(@aria-label,'${option}')]//span`);
-        this.$selectButton = ()=> $(`//button[@id='KhCkPWanaE']`);
+        this.$selectUserDropDownOptions = (option)=> $(`(//ul[@role="listbox"]//li/span[text()="${option}"])[2]`);
+        this.$selectRoleDropDownOptions = (option)=> $(`(//li[@aria-label='${option}']//span)[last()]`);
+        this.$selectButton = ()=> $(`(//div[@style="max-width: 60%"]//button)[last()]`);
     }
 
     /**
@@ -29,9 +29,9 @@ class SelectUserPage extends CommonPage{
     /**
      * Select the option Admin from the Select Role dropdown and verify it is selected
      */
-    async selectRole(){
+    async selectRole(role){
         await this.$selectUserDropDownsPlaceholders("Select Role").click();
-        await this.$selectRoleDropDownOptions("LEA_Data_Admin").waitForDisplayed()
-        await this.$selectRoleDropDownOptions("LEA_Data_Admin").click();
+        await this.$selectRoleDropDownOptions(role).waitForDisplayed({timeout: 10000, timeoutMsg: "Select Role dropdown option not displayed"});
+        await this.$selectRoleDropDownOptions(role).click();
     }
 } export default new SelectUserPage();
