@@ -1,20 +1,23 @@
-import Common from "./edMaster/common.js";
-
+import Common from "./common.js";
+import path from 'path';
+import os from 'os';
 class RequestPage extends Common{
     constructor(){
         super();
-        this.$uploadField=()=>$(`(//img[@src="images/doc-upload.svg"])[1]`)
+        this.$uploadField=()=>$(`(//form[@class="rz-form w-100"]//img[@src="images/doc-upload.svg"])[1]`)
         this.$reasonForChangeField=()=>$(`(//textarea[@aria-label="TextArea"])[1]`)
         this.$alertMsg=()=>$(`(//p[@class="rz-dialog-alert-message"])[1]`)
     }
     async upload1(){
-    const filepath=`MockData.csv`;
+    // const homeDir = os.homedir();
+    // const filepath=path.join(homeDir, 'Downloads', MockData.xlsx);
+    const filepath='Automation_Assessment/test/MockData.csv'
     const remoteFilePath = await browser.uploadFile(filepath);
     await this.$uploadField().setValue(remoteFilePath);
     }
 
     async upload2(){
-    const filepath=`Manual.csv`;
+    const filepath=`./test/Manual.xlsx`;
     const remoteFilePath = await browser.uploadFile(filepath);
     await this.$uploadField().setValue(remoteFilePath);
     }

@@ -9,19 +9,21 @@ class ChangeRequest extends Common{
         this.$educationHeader=()=>$(`//span[contains(text(),"Organization")]`);
         this.$categoryHeader=()=>$(`//span[contains(text(),"Category")]`);
         this.$dateHeader=()=>$(`//span[contains(text(),"Date")]`);
-        this.$selectingCategoryDropdown=()=>$(`//span[contains(text(),"Category")]/../following-sibling::div//label`);
-        this.$selectingEducationDropdown=()=>$(`//span[contains(text(),"Education")]/../following-sibling::div//label`);
+        this.$selectingDropdown=(name)=>$(`//span[contains(text(),"${name}")]/../following-sibling::div//label`);
         this.$selectingFromDropdown=(institution)=>$(`//li[@aria-label="${institution}"]`);
+        this.$institutionName=()=>$(`//span[@class="add-request-organization-name"]`);
         this.$futureButton=()=>$(`//div[@class="rz-radio-btn"]/following-sibling::div`);
-        this.$dateButton=()=>$(`//button[contains(@class,"rz-datepicker-trigger rz-calendar-button")]`);
-        this.$monthTab=()=>$(`(//div[@class="rz-datepicker-title"]//label[contains(@class,"rz-dropdown-label rz-inputtext ")])[1]`);
+        this.$dateButton=()=>$(`//button[contains(@class,"rz-datepicker-trigger rz-calendar-button")]/..`);
+        this.$monthTab=()=>$(`//li[@aria-label="July"]//ancestor::div[@class="rz-dropdown"]`);
         this.$month=(month)=>$(`//li[@aria-label="${month}"]`);
         this.$yearTab=()=>$(`(//div[@class="rz-datepicker-title"]//label[contains(@class,"rz-dropdown-label rz-inputtext ")])[2]`);
         this.$year=()=>$(`(//div[@class="rz-datepicker-title"]//label[contains(@class,"rz-dropdown-label rz-inputtext ")])[2]`);
         this.$day=(day)=>$(`//span[contains(text(),"${day}")]`);
         this.$icons=(name)=>$(`//p[text()="${name}"]`);
-        this.$educationHeader=()=>$(`(//span[text()="Douglas Unified District"])[1]`);
-        this.$closeButton=()=>$(`(//span[text()=" Close"])[1]`);
+        this.$educationHeader=()=>$(`//div[@class="search-education-title"]/span[contains(text(),"Education")]`);
+        this.$closeButton=()=>$(`//div[@class="rz-card rz-variant-text"]/following-sibling::div[@class="approval-button-actions"]//span[normalize-space()="Close"]`);
+        this.$calendarButton=()=>$(`//span//input[@class="rz-inputtext  rz-readonly"]`);
+        this.$calenderDates=(day)=>$(`//span[text()="${day}"]/parent::td`);
     }
 
     /**
@@ -39,8 +41,9 @@ class ChangeRequest extends Common{
      * @param {string} education 
      */
     async selectingInstitution(education){
-        await this.$selectingEducationDropdown().click();
-        await this.$selectingEducation(education).click();
+        await this.$selectingDropdown("Education").click();
+        await this.$selectingFromDropdown(education).click();
+        await this.$institutionName().waitForDisplayed({timeout:time.med,timeoutMsg:"Institution name is not displayed."})
     }
 
     /**
@@ -48,25 +51,40 @@ class ChangeRequest extends Common{
      * @param {string} category 
      */
     async selectingCategory(category){
-        await this.$selectingEducationDropdown().click();
-        await this.$selectingEducation(category).click();
+        await this.$selectingDropdown("Category").click();
+        await this.$selectingFromDropdown(category).click();
     }
+
 
     /**
      * This function is for selecting the date.
      */
-    async selectingDate(date,month,year){
-        await this.$futureButton().click();
-        await this.$monthTab().click();
-        let months=["January","February","March","April","May","June","July","August","September","October","November","December"]
-        let selectingMonth=months[month-1];
-        await this.$month(selectingMonth).click();
-        await this.$yearTab().click();
-        await this.$year(year);
-        await this.$date(date).click();
+    async selectDate() {
+        await this.$futureButton().click()
+        await this.$calendarButton().click();
+        let previousDays = [];
+        let dateFunction = new Date();
+        let currentDay = dateFunction.getDate();
+   
+        for (let day = 1; day < currentDay; day++) {
+            previousDays.push(day);
+        }
+   
+        console.log(previousDays);
+        await this.$calenderDates(currentDay + 1).click();
+   
+        return previousDays;
     }
+ 
     async clickingOnOrganizationCategoryIcon(name){
         await this.$icons(name).click();
     }
+    async closing(){
+        await this.$closeButton().scrollIntoView();
+        await this.$closeButton().click();
+
+    }
+
+ 
 }
 export default new ChangeRequest();
