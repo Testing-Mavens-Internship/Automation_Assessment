@@ -2,159 +2,89 @@ import landingPageObj from "../../pageobjects/landingPage.js";
 import selectUserPageObj from "../../pageobjects/selectUserPage.js";
 import changeRequestPageObj from "../../pageobjects/changeRequestPage.js";
 
+const changeRequestFieldsLabelArray = ["Education Organization", "Category", "Effective Date"]
+
+
 
 describe("End to end flow of Edwise web application", () => {
 
     it("Launch Edwise web application", async () => {
-        await landingPageObj.launchUrl();
-
-        
+        await landingPageObj.loadUrl();
         expect(await landingPageObj.$spinner().waitForDisplayed({
             timeout: 250000,
             timeoutMsg: "Spinner did not disappear",
             reverse: true,
-        })).withContext("Spinner display test failed").toBe(true); })
+        })).withContext("Spinner display test failed").toBe(true); 
+        expect(await landingPageObj.$landingPageUsernameHeader("Username").isDisplayed()).toBe(true);})
 
-    it("Click on configurations menu", async () => {
+    it("Click on Configuration Menu", async () => {
         await landingPageObj.$configurationsMenu().click();
-        let arr = ["Select User", "Role Permission", "User Roles", "Section Configurations"];
-        for (let i = 0; i < arr.length; i++) {
-            expect(
-                await landingPageObj
-                    .$configurationsMenuOptions(arr[i])
-                    .isDisplayed({
-                        timeout: 10000,
-                        timeoutMsg: "landing page header not displayed",
-                    })
-            ).withContext(`${arr[i]} menu option display test failed`).toBe(true);
+        expect(await landingPageObj.$configurationsMenuOptions().isDisplayed()).toBe(true);
+    })
+    it("Click on Select User Menu", async () => {
+        await landingPageObj.clickElementButton(landingPageObj.$configurationsMenuOptions());
+        expect(await selectUserPageObj.$landingPageFieldsPlaceholders("Select User").isDisplayed()).withContext("Select User field").toBe(true);
+        expect(await selectUserPageObj.$landingPageFieldsPlaceholders("Select User").isDisplayed()).withContext("Select Role").toBe(true);
+    })
+    it("click on Select User dropdown", async()=>{
+        await selectUserPageObj.clickElementButton(selectUserPageObj.$landingPageFieldsPlaceholders("Select User"));
+        expect(await selectUserPageObj.$selectUserName("Sachin").isDisplayed).withContext("Name is not in the option").toBeTrue();
+    })
+    it("Select the name Sachin from the options", async()=>{
+        let selectedUsername = await selectUserPageObj.selectUser("Sachin");
+        expect(selectedUsername).isEqual("Sachin");
+    })
+    it("click on Select Role dropdown", async()=>{
+        await selectUserPageObj.clickElementButton(selectUserPageObj.$landingPageFieldsPlaceholders("Select Role"));
+        expect(await selectUserPageObj.$selectUserName("LEA_Data_Admin").isDisplayed).withContext("Role is not in the option").toBeTrue();
+    })
+    it("Select the role LEA_Data_Admin from the options", async()=>{
+        let selectedRole = await selectUserPageObj.selectRole("LEA_Data_Admin");
+        expect(selectedRole).isEqual("LEA_Data_Admin");
+    })
+    it("Click the Select Button and verify username", async()=>{
+        await selectUserPageObj.clickElementButton(await selectUserPageObj.$selectButton())
+        let username = await landingPageObj.$landingPageUsernameHeader("Sachin").getText;
+        expect(username).isEqual("Sachin").withContext("Username is not Displayed").toBeTrue();
+    })
+    it("Click on Add Request Menu", async()=>{
+        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$addRequestMenu())
+        for(let i =0;i<changeRequestFieldsLabelArray.length;i++){
+            expect(await changeRequestPageObj.$changeRequestFieldsLabel(changeRequestFieldsLabelArray[i]).isDisplayed()).withContext("Field is not displayed").toBeTrue();
         }
-    });
+    })
+    it("Click on Educational Organization dropdown", async()=>{
+        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$changeRequestFields("Select Education Organization"))
+        expect(await changeRequestPageObj.$selectEducationalOrganizationOption("Sierra Vista Unified District").isDisplayed()).withContext("Educational organisation option is not displayed.").toBeTrue();
+    })
+    it("Select the Sierra Vista Unified District as Educational Organization",async()=>{
+        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$selectEducationalOrganizationOption("Sierra Vista Unified District"))
+        expect(await changeRequestPageObj.$changeRequestFields("Sierra Vista Unified District").isDisplayed()).withContext("Educational organization option is not selected")
+    })
+    it("Click on Category dropdown and verify School category is available", async()=>{
+        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$changeRequestFields("Charter Authorizer"))
+        expect(await changeRequestPageObj.$categoryOption("School").isDisplayed()).withContext("Category option is not available").toBeTrue()
+    })
+    it("Select option School as Category and verify whether the option is selected",async()=>{
+        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$categoryOption("School"))
+        let isHeadersVisible = await changeRequestPageObj.validateChangeRequestHeaders("Sierra Vista Unified District", "School")
+        expect(isHeadersVisible).withContext("Headers are not visible").toBeTrue();
+    })
+    it("Check Future and verify the calender is enabled or not", async()=>{
+        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$futureDate())
+        expect (await changeRequestPageObj.$calender().isEnabled()).withContext("Calender is not enabled").toBeTrue();
+    })
+    it("Click on calender and pick a date", async()=>{
+        let status = await changeRequestPageObj.pickADate();
+        expect(status).withContext("Direction Button is not displayed").toBeTrue()
+    })
+    it("select the organisation menu",async()=>{
+            await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$organisationCategoryMenu())
+            expect(await changeRequestPageObj.$organizationalCategoryPopupHeader().isDisplayed()).withContext("Header is not displyed").toBeTrue();
+    })
+    it("Fill the details in the organizational category popup ",async()=>{
+        await changeRequestPageObj.fillDetails();
+    })
 
-    it("Select the select user option from the Configurations menu", async () => {
-        await landingPageObj.$configurationsMenuOptions().click();
-        expect(await selectUserPageObj.$selectUserDropDownsPlaceholders("Select User")
-            .isDisplayed({ timeout: 10000, timeoutMsg: "Select User dropdown placeholder not displayed", }))
-            .withContext("Select User dropdown display test failed")
-            .toBe(true);
-
-        expect(await selectUserPageObj.$selectUserDropDownsPlaceholders("Select Role")
-            .isDisplayed({ timeout: 10000, timeoutMsg: "Select Role dropdown placeholder not displayed", }))
-            .withContext("Select Role dropdown display test failed")
-            .toBe(true);
-    });
-
-    it("Select the option Sachin from the Select User dropdown and verify it is selected", async () => {
-        await selectUserPageObj.selectUser("Sachin");
-        expect(await selectUserPageObj.$selectUserDropDownOptions("Sachin").isSelected());
         
     })
-
-    it('Select the option LEA_Data_Admin from the Select Role dropdown and verify it is selected', async () => {
-        await selectUserPageObj.selectRole("LEA_Data_Admin");
-        expect(await selectUserPageObj.$selectRoleDropDownOptions("LEA_Data_Admin").isSelected());
-    })
-    it('Click on the select Button', async () => {
-        await selectUserPageObj.clickElementButton(await selectUserPageObj.$selectButton());
-        await browser.pause(5000);
-        expect(await changeRequestPageObj.$addRequestMenu().isDisplayed()).withContext("Add Request Menu display test failed").toBe(true);
-        expect(await changeRequestPageObj.$approvalQueueMenu().isDisplayed()).withContext("Approval Queue Menu display test failed").toBe(true);
-    })
-    it('Click on Add Request Menu', async () => {
-        let labelArray = ["Education Organization", "Category", "Effective Date"];
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$addRequestMenu());
-        for (let i = 0; i < labelArray.length; i++) {
-            expect(await changeRequestPageObj.$changeRequestFieldsLabel(labelArray[i]).isDisplayed()).withContext(`${labelArray[i]} label display test failed`).toBe(true);
-        }
-    })
-    it('Click on Educational Organization Dropdown and validate the options', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$changeRequestFields("Select Education Organization"));
-        let extractedTextArray = await changeRequestPageObj.extractTextFromElements();
-        expect(extractedTextArray.length).toBeGreaterThan(0);
-    })
-    it('Select Sierra Vista Unified District as Educational Organization', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$selectEducationalOrganizationOption("Sierra Vista Unified District"));
-        await browser.pause(5000);
-        let cardTextArray = await changeRequestPageObj.validateChangeRequestCard();
-        expect(cardTextArray.length).toBeGreaterThan(0);
-    })
-    it('Click on category dropdown and validate the options', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$changeRequestFields('Charter Authorizer'));
-        let categoryTextArray = await changeRequestPageObj.validateCategoryOptions();
-        expect(categoryTextArray.length).toBeGreaterThan(0);
-    })
-    it('Select Charter Authorizer as Category', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$categoryOption(1));
-        let cardTextArray = await changeRequestPageObj.validateChangeRequestCard();
-        expect(cardTextArray.length).toBeGreaterThan(0);
-    })
-    it('Check the future date and verify that the calender is clickable', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$futureDate());
-        expect(await changeRequestPageObj.$calender().isEnabled());
-    })
-    it('Click on calender and verify that the past date is not clickable', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$calender());
-        await browser.pause(5000);
-        expect(await changeRequestPageObj.$pastDate().isEnabled());
-    })
-    it('Pick a date from the calender', async () => {
-        await changeRequestPageObj.pickADate();
-    })
-    it('click on organizational categories', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$organizationCategoryDiv());
-        let status = await changeRequestPageObj.reviewChangerequest();
-        expect(status).toBe(true);
-    })
-    it('click on close button', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$closeButton());
-        expect(await changeRequestPageObj.$changeRequestPageHeader().isDisplayed()).withContext("Change Request page header display test failed").toBe(true);
-    })
-    it('Click on Add Request Menu', async () => {
-        let labelArray = ["Education Organization", "Category", "Effective Date"];
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$addRequestMenu());
-        for (let i = 0; i < labelArray.length; i++) {
-            expect(await changeRequestPageObj.$changeRequestFieldsLabel(labelArray[i]).isDisplayed()).withContext(`${labelArray[i]} label display test failed`).toBe(true);
-        }
-    })
-    it('Click on Educational Organization Dropdown and validate the options', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$changeRequestFields("Select Education Organization"));
-        let extractedTextArray = await changeRequestPageObj.extractTextFromElements();
-        expect(extractedTextArray.length).toBeGreaterThan(0);
-    })
-    it('Select Sierra Vista Unified District as Educational Organization', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$selectEducationalOrganizationOption("Sierra Vista Unified District"));
-        await browser.pause(5000);
-        let cardTextArray = await changeRequestPageObj.validateChangeRequestCard();
-        expect(cardTextArray.length).toBeGreaterThan(0);
-    })
-    it('Click on category dropdown and validate the options', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$changeRequestFields('Charter Authorizer'));
-        let categoryTextArray = await changeRequestPageObj.validateCategoryOptions();
-        expect(categoryTextArray.length).toBeGreaterThan(0);
-    })
-    it('Select Charter Authorizer as Category', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$categoryOption(1));
-        let cardTextArray = await changeRequestPageObj.validateChangeRequestCard();
-        expect(cardTextArray.length).toBeGreaterThan(0);
-    })
-    it('Check the future date and verify that the calender is clickable', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$futureDate());
-        expect(await changeRequestPageObj.$calender().isEnabled());
-    })
-    it('Click on calender and verify that the past date is not clickable', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$calender());
-        await browser.pause(5000);
-        expect(await changeRequestPageObj.$pastDate().isEnabled());
-    })
-    it('Pick a date from the calender', async () => {
-        await changeRequestPageObj.pickADate();
-    })
-    it('click on relationships', async () => {
-        await changeRequestPageObj.clickElementButton(await changeRequestPageObj.$relationship());
-        let status = await changeRequestPageObj.reviewChangerequest();
-        expect(status).toBeTrue();
-    })
-    it('fill the relationship form and click save button', async () => {
-        await changeRequestPageObj.fillRelationshipForm("Aswin");
-    })
-
-})
