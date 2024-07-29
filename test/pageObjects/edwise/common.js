@@ -20,8 +20,7 @@ export default class CommonPage {
      */
 
     async clickButton(locator){
-        // await locator.scrollIntoView();
-        // await locator.waitForDisplayed({timeout:10000,timeoutMsg:'Button is not displayed'});
+        
         await locator.click()
     }
 }
