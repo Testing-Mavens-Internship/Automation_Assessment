@@ -68,6 +68,9 @@ class AddRequestPage extends Common{
         await this.$calendar().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Calendar still not displayed"})
     }
 
+    /**
+     * method to select the date
+     */
     async selectDate(){
         await this.clickButton(this.$monthSelector())
         await this.clickButton(this.$month())
