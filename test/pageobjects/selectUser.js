@@ -1,53 +1,47 @@
 import Common from "./common.js";
-class SelectUser extends Common{
+import wait from "../../testData/time.json"assert{type:"json"}
+let minTimeout=wait.time.min;
+let midTimeout=wait.time.mid;
+let maxTimeout=wait.time.max 
+class SelectUSer extends Common{
     constructor(){
         super()
-        this.$selectUSer=()=>$(`//a[@href="/SelectUser"]`)
-        this.$validatingTextbox=()=>$(`//div[@id="fErpzzbtqk"]`)
-        this.$userDropdown=()=>$(`//div[@class="rz-p-0 rz-p-md-12"]/div/div/div/div//label[text()="Select User"]`)
-        this.$userOption=()=>$(`(//li[@class="rz-dropdown-item "]/span[text()="Sachin"])[2]`)
-        this.$roleDropdown=()=>$(`//div[@class="rz-p-0 rz-p-md-12"]/div/div/div/div//label[text()="Select Role"]`)
-        this.$roleOptions=()=>$(`(//li[@class="rz-dropdown-item "]/span[text()="LEA_Data_Admin"])[2]`)
-        this.$button=()=>$(`(//div[contains(@class,"rz-stack rz-display-")]/button)[2]`)
-        this.$changeRequestHeader=()=>$(`//a[@href="/ChangeRequest"]`)
-        this.$userIconName=()=>$(`//div[contains(@class,"rz-stack rz-display-")]/div/label[normalize-space()="Sachin"]`)
-        this.$addRequestLink=()=>$(`//div[contains(@class,"rz-navigation-")]/a[@href="/AddRequest"]`)
-        this.$approvalQueue=()=>$(`//div[contains(@class,"rz-navigation-")]/a[@href="/ApproverSummary"]`)
-        
-    }
-    /**
-     * Method to click on selectUSer and validate textbox
-     */
-    async ClickOnSelectUser(){
-        await this.$selectUSer().click();
-       
-    }
-    /**
-     * Method to select values from textbox
-     */
-    async selectingDropDownValues(){
-        await this.$userDropdown().waitForClickable();
-        await this.$userDropdown().click();
-        await this.$userOption().click();
+        this.$dropdownBox=()=>$(`//div[@class="rz-p-0 rz-p-md-12"]//div[contains(@class,"-flex-start rz-p-4")]`)
+        this.$selectUserDropdown=()=>$(`//div[@class="rz-p-0 rz-p-md-12"]//div[contains(@class,"-flex-start rz-p-4")]//label[normalize-space()="Select User"]`)
+        this.$dropdownOptions=()=>$(`(//div[@class="rz-p-0 rz-p-md-12"]//following::div/ul/li/span[normalize-space()="Sachin"])[last()]`)
+        this.$selectRoleDropdown=()=>$(`//div[@class="rz-p-0 rz-p-md-12"]//div[contains(@class,"-flex-start rz-p-4")]//label[normalize-space()="Select Role"]`)
+        this.$roleDropdowOption=()=>$(`(//div[@class="rz-p-0 rz-p-md-12"]//following::div/ul/li/span[normalize-space()="LEA_Data_Admin"])[last()]`)
+        this.$selectButton=()=>$(`//div[contains(@class,"rz-justify-content-flex-end")]/button/span[normalize-space()="Select"]/parent::button`)
 
-        await this.$roleDropdown().waitForClickable();
-        await this.$roleDropdown().click();
-        await this.$roleOptions().click();
-        await this.$button().click();
-
-        await this.$addRequestLink().waitForDisplayed(({timeout:5000,timeoutMsg:"AddRequest link still not displayed"}))
-        await this.$approvalQueue().waitForDisplayed(({timeout:5000,timeoutMsg:"Approval Queue link still not displayed"}))
-        
-
+        this.$loaderIcon=()=>$(`//div[@class="lds-spinner"]`)
+        this.$userIcon=()=>$(`//div[@class="header-profile-menu"]//label[normalize-space()="Sachin"]`)
 
     }
     /**
-     * Method to check change request link is displayed or not
-     * 
+     * Method to click on select user dropdown and select option
      */
+    async selectingDropdownFromSelectUser(){
+        await this.$selectUserDropdown().click();
+        await this.$dropdownOptions().click();
 
-    // async validatingChangeRequest(){
-    //     await this.$changeRequestHeader().waitForDisplayed(({timeout:5000,timeoutMsg:"header still not displayed"}))
-    // }
+    }
+
+    /**
+     * Method to click on select role dropdown and select option
+     */
+    async selectingDropdownfromSelectRole(){
+        await this.$selectRoleDropdown().click();
+        await this.$roleDropdowOption().click();
+    }
+    /**
+     * Method to click select button
+     */
+    async clickOnSelectButton(){
+        await this.$selectButton().waitForClickable();
+        await this.$selectButton().click();
+        await this.$loaderIcon().waitForDisplayed(({timeout:midTimeout,timeoutMsg:"Loader is still loading",reverse:true}))
+    }
+
+
 }
-export default new SelectUser()
+export default new SelectUSer()

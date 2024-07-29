@@ -1,117 +1,74 @@
-import addRequest from "../pageobjects/addRequest.js";
-import landingPage from "../pageobjects/landingPage.js";
-import selectUser from "../pageobjects/selectUser.js";
-describe("end to end flow of edwise webpage",()=>{
-    it("launch the url",async()=>{
-        await landingPage.loadUrl();
-      await landingPage.$loading().waitForDisplayed(({timeout:50000,timeoutMsg:"still loading",reverse:true}))
 
+import wait from"../../testData/time.json"assert{type:"json"}
+import addrequest from "../pageobjects/addrequest.js";
+import landingPage from "../pageobjects/landingPage.js"
+import selectuser from "../pageobjects/selectuser.js";
+
+let minTimeout=wait.time.min;
+let midTimeout=wait.time.mid;
+let maxTimeout=wait.time.max 
+describe("End to End flow of Edwise webpage",()=>{
+    it("launching url",async()=>{
+        await landingPage.loadUrl();
+        expect(await landingPage.$edwiseHeader().isDisplayed()).withContext("Edwise header is not displayed").toBeTrue();
     })
 
     it("Clicking on configuration link",async()=>{
-        await landingPage.clickOnConfiguration();
-        expect(await landingPage.$logoHeader().isDisplayed()).withContext("Logo is not displayed").toBeTrue();
+        await landingPage.clickOnConfigurationsLink();
+        expect(await landingPage.$selectUserHeader().isDisplayed()).withContext("selectUser link is not displayed").toBeTrue();
     })
-    it("Clicking on selectUser",async()=>{
-        await selectUser.ClickOnSelectUser();
-        expect(await landingPage.$logoHeader().isDisplayed()).withContext("Logo is not displayed").toBeTrue();
+    it("Clicking on select user",async()=>{
+        await landingPage.clickOnselectUserLink()
+        expect(await landingPage.$dropdownBox().isDisplayed()).withContext("dropdown boxes is not displayed").toBeTrue();
+
+    })
+    it("Selecting dropdown options form select user",async()=>{
+        await selectuser.selectingDropdownFromSelectUser();
+        expect(await selectuser.$dropdownBox().isDisplayed()).withContext("dropdown boxes is not displayed").toBeTrue();
+    })
+    
+    it("Selecting dropdown Optons from select role",async()=>{
+        await  selectuser.selectingDropdownfromSelectRole();
+        expect(await selectuser.$dropdownBox().isDisplayed()).withContext("dropdown boxes is not displayed").toBeTrue();
+        await browser.pause(5000)
+    })
+    it("Clicking on select button",async()=>{
+        await selectuser.clickOnSelectButton();
+        expect(await selectuser.$userIcon().isDisplayed()).withContext("Usericon is not displayed").toBeTrue();
+
+    })
+
+    it("Clicking on addrequest link",async()=>{
+        await addrequest.clickOnAddRequest();
+        expect(await addrequest.$headerChange().isDisplayed()).withContext(" header is not displayed").toBeTrue();
+
+    })
+    it("Selecting Education organization dropdown options",async()=>{
+        await addrequest.selectingOptionFromEducationOrganizationDropDown();
+        expect(await addrequest.$educationTextboxValue().isDisplayed()).withContext("Education name is not displayed in textbox").toBeTrue();
+    })
+    it("Selecting select category dropdown options",async()=>{
+        await addrequest.selectingoptionFromCategoryDropdown();
+        expect(await addrequest.$categoryTextboxValue().isDisplayed()).withContext("School label is not displayed").toBeTrue();
+    })
+    it("Selecting effective future date checkbox",async()=>{
+        await addrequest.selectingEffectiveDateCheckbox();
+        expect(await addrequest.$enabledCalender().isDisplayed()).withContext("Calender is not enabled").toBeTrue();
+    })
+    it("clicking on Calendar",async()=>{
+        await addrequest.clickingOnCalendar();
+        expect(await addrequest.$datePicker().isDisplayed()).withContext("Date picker window is not displayed").toBeTrue();
+    })
+    it("selecting date and month",async()=>{
+        await addrequest.selectingDate();
       
-    })
- 
-    it("Selecting dropdwon values",async()=>{
-        await selectUser.selectingDropDownValues();
-        expect(await selectUser.$userIconName().isDisplayed()).withContext("userIconName is not displayed").toBeTrue();
+        expect(await addrequest.$finalDate().isDisplayed()).withContext("Date picker window is not displayed").toBeTrue();
+
     })
 
-    it("Clicking on add request",async()=>{
-        await addRequest.clickOnAddRequestLink();
-        expect(await addRequest.$educationLabel().isDisplayed()).withContext("Education label is not displayed").toBeTrue();
-        expect(await addRequest.$categoryLabel().isDisplayed()).withContext("Category label is not displayed").toBeTrue();
-        expect(await addRequest.$dateLabel().isDisplayed()).withContext("date label is not displayed").toBeTrue();
-    })
-
-    it("selecting education organization from drop down",async()=>{
-        await addRequest.selectionOptionEducationOrganization();
-        expect(await addRequest.$educationTextboxValue().isDisplayed()).withContext("value is not dispayed").toBeTrue();
-    })
-
-    it("selecting category dropdown",async()=>{
-        await addRequest.SelectCategory();
-        expect(await addRequest.$categoryTextboxValue().isDisplayed()).withContext("Value is not displayed").toBeTrue();
-    })
-
-    it("Clickong on effective date",async()=>{
-        await addRequest.SelectingEffectiveDate();
-        expect(await addRequest.$calendar().isDisplayed()).withContext("Calender is not enabled").toBeTrue();
-    })
-    it("Clicking on calender",async()=>{
-        await addRequest.clickingOncalendar();
-        expect(await addRequest.$calendar().isDisplayed()).withContext("Calender is not enabled").toBeTrue();
-    })
-
-    it("clicking on organization category",async()=>{
-        await addRequest.clickingOnOrganizationCategory();
-        expect(await addRequest.$headerChange().isDisplayed()).withContext("change request is not displayed").toBeTrue();
+    it("clicking on organiization category",async()=>{
+        await addrequest.clickOnOrganizationCategory()
         
-
-    })
-
-    it("clicking on change Request link",async()=>{
-        await addRequest.clickOnChangeRequestLink();
-        expect(await addRequest.$changeReqHeader().isDisplayed()).withContext("change request is not displayed").toBeTrue();
-
-    })
-
-    it("clicking on addRequest",async()=>{
-        await addRequest.clickaddRequest();
-        expect(await addRequest.$headerChange().isDisplayed()).withContext("change request is not displayed").toBeTrue();
         
-})
-
-it("selecting education oraganization  from dropdown",async()=>{
-    await  addRequest.selectionOptionEducationOrganization();
-    expect(await addRequest.$educationTextboxValue().isDisplayed()).withContext("value is not dispayed").toBeTrue();
-
-})
-it("Selecting category dropdown",async()=>{
-    await addRequest.SelectCategory();
-    expect(await addRequest.$categoryTextboxValue().isDisplayed()).withContext("Value is not displayed").toBeTrue();
-})
-it("selecting effective date checkbox",async()=>{
-    await addRequest.SelectingEffectiveDate();
-    expect(await addRequest.$calendar().isDisplayed()).withContext("Calender is not enabled").toBeTrue();
-})
-it("clicking on calender and selecting date",async()=>{
-    await addRequest.clickingOncalendar();
-    expect(await addRequest.$calendar().isDisplayed()).withContext("Calender is not enabled").toBeTrue();
-})
-
-it("clicking on relationship link",async()=>{
-    await addRequest.clickingOnRelationShipLink();
-})
-
-it("clicking on Add relationship button",async()=>{
-    await addRequest.clickOnAddRelationshipButton();
-    expect(await addRequest.$nameRequiredMessage().isDisplayed()).withContext("message is not displayed").toBeTrue();
-
-})
-
-it("Selecting organization name",async()=>{
-    await addRequest.selectNamFromDropdown();
-})
-it("Entering inputs into reason textbox",async()=>{
-    await addRequest.enteringReason();
-})
-
-it("Clicking on uploadFile",async()=>{
-    await addRequest.clickOnUploadFile();
-})
-
-
-
-   
-
-
-
-
+    })
 })

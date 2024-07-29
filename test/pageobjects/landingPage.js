@@ -1,36 +1,30 @@
 import Common from "./common.js";
-class Landingpage extends Common{
+import wait from "../../testData/time.json"assert{type:"json"}
+let minTimeout=wait.time.min;
+let midTimeout=wait.time.mid;
+let maxTimeout=wait.time.max 
+class LandingPage extends Common{
     constructor(){
         super()
-        this.$configuration=()=>$(`//div[@class="rz-navigation-item-link"]`)
-        this.$$lists=()=>$$(`//li[@class="rz-navigation-item config-sub-link"]`)
-        this.$loading=()=>$(`//div[@class="loader-home"]/div`)
-        this.$advancedFilter=()=>$(`//span[normalize-space()="Advanced Filter"]`)
-        this.$logoHeader=()=>$(`//div[contains(@class,"rz-stack rz-display-")]/img`)
-        
-
+        this.$configurationLink=()=>$(`//div[@class="rz-navigation-item-link"]`)
+        this.$selectUserHeader=()=>$(`//a[@href="/SelectUser"]`)
+        this.$selectUserLink=()=>$(`//a[@href="/SelectUser"]`)
+        this.$dropdownBox=()=>$(`//div[@class="rz-p-0 rz-p-md-12"]//div[contains(@class,"-flex-start rz-p-4")]`)
     }
     /**
-     * Method to click on configuration
+     * Method to click on configuration Link
      */
-    async clickOnConfiguration() {
-        let finalList = [];
-        await this.$configuration().click();
-        const displayedList = await this.$$lists(); 
-        for (let i = 0; i < displayedList.length; i++) { 
-            const text = await displayedList[i].getText(); 
-            finalList.push(text); 
-        }
-        if(finalList==displayedList){
-            console.log("validation successfull")
-        }else{
-            console.error("validation failed items list is not  displayed")
-        }
-   
-
-       
+    async clickOnConfigurationsLink(){
+        await this.$configurationLink().waitForClickable()
+        await this.$configurationLink().click();
     }
-
-
+    /**
+     * Method to click on select user link 
+     */
+    async clickOnselectUserLink(){
+        await this.$selectUserLink().click();
+        await this.$dropdownBox().waitForDisplayed(({timeout:midTimeout,timeoutMsg:"Dropdown boxs still no displayed"})) 
+    }
+    
 }
-export default new Landingpage
+export default new LandingPage();
