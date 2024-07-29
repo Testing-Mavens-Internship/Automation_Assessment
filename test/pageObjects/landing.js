@@ -1,46 +1,41 @@
 import CommonPage from "./common.js";
-import time from "../testData/data.json" assert {type: 'json'};
 
-class LandingPage extends CommonPage{
+class landingPage extends CommonPage{
     constructor(){
         super();
-            this.$userNameHeader=()=>$(`//div[@id="header-profile-menu"]`);
-            this.$configurations=()=>$(`//div[@class="rz-navigation-item-link"]`);
-            this.$$optionsAvailable=()=>$$(`//ul[@class="rz-navigation-menu"]//li//a//span`);
-            this.$selectUser=()=>$(`//span[text()="Select User"]/../..`);
-            this.$$validateSelectUser=()=>$$(`//div[@class="rz-p-0 rz-p-md-12"]//label/..`);
-    }
+         this.$userNameHeader=()=>$(`//div[@class="header-profile-menu"]`);
+         this.$configurations=()=>$(`//div[contains(@class,"item-link")]`);
+         this.$$dropDownMenu=()=>$$(`//ul[@class="rz-navigation-menu"]//span`);
+         this.$selectUser=()=>$(`//a[@href="/SelectUser"]`);
+         this.$$validateSelectUser=()=>$$(`//div[@class="add-request-search-filters"]`);
 
+    }
+    
     /**
-     * To click on configurations and validate the options displayed
+     * To get the texts of dropDown elements of configurations
      * @returns string
      */
     async clickConfigurations() {
         await this.$configurations().click();
-    
-        const text = [];
-        const options = await this.$$optionsAvailable();
-        const count = options.length;
-    
-        for (let i = 0; i < count; i++) {
-            const optionText = await options[i].getText();
-            console.log(optionText);
-            text.push(optionText);
+       
+        let dropDownElements = await this.$$dropDownMenu();
+        const elementsOfDropDown = [];
+        for (let i = 0; i < dropDownElements.length; i++) {
+            const text = await dropDownElements[i].getText();
+            elementsOfDropDown.push(text);
         }
-    
-        return text;
+        return elementsOfDropDown;
     }
     
     /**
-     * To click on select user option from configurations
+     * To click on select user option from the dropdown menu
      */
     async selectUserOption(){
         await this.$selectUser().click();
-     
     }
-
+    
     /**
-     * To validate the presence of two boxes
+     * To validate the presence of two boxes for selecting user 
      */
     async validateTwoBoxesPresence() {
         const elements = await this.$$validateSelectUser();
@@ -53,6 +48,6 @@ class LandingPage extends CommonPage{
         return count;
     }
 
-}
 
-export default new LandingPage();
+}
+export default new landingPage();

@@ -6,5 +6,8 @@
     "select": "Select User",
     "role": "Select Role",
     "name" : "Sachin",
-    "selectRole": "LEA_Data_Admin"
+    "selectRole": "LEA_Data_Admin",
+    "headers": ["Education Organization", "Category", "Effective Date"],
+    "organization": "Tombstone Unified District"
+
 }
