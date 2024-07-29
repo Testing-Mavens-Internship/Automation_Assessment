@@ -4,9 +4,9 @@ import userName from '../testData/data.json' assert {type: 'json'};
 class LoginPage extends CommonPage{
     constructor(){
         super();
-            this.$userDropDown=(select)=>$(`(//label[text()="${select}"])[1]`);
-            this.$selectNameAndRole=(name)=>$(`(//li[@aria-label="${name}"])[2]`);
-            this.$selectButton=()=>$(`(//span[normalize-space()="Select"])[1]`);
+            this.$userDropdown = (dropDown) => $(`//div[@class="rz-p-0 rz-p-md-12"]//label[text()="${dropDown}"]/ancestor::div[@class="rz-dropdown"]`);
+            this.$dropDownElement = (name) => $(`//div[@class="rz-dropdown-panel rz-popup"]//span[text()="${name}"]`);
+            this.$selectButton=()=>$(`(//span[normalize-space()="Select"]//ancestor::button)[1]`);
 
     }
 
@@ -14,13 +14,11 @@ class LoginPage extends CommonPage{
      * To select user and role and to click submit button
      */
     async clickSelectUserDropdown(){
-        await this.$userDropDown("Select User").setValue(userName.select).click();
-        await this.$selectNameAndRole("Sachin").setValue(userName.name).click();
-        await this.$userDropDown("Select Role").setValue(userName.role).click();
-        await this.$selectNameAndRole("LEA_Data_Admin").setValue(userName.role).click();
+        await this.$userDropdown(userName.select).click();
+        await this.$dropDownElement(userName.name).click();
+        await this.$userDropdown(userName.role).click();
+        await this.$dropDownElement(userName.selectRole).click();
         await this.$selectButton().click();
-
-
     }
 }
 export default new LoginPage;

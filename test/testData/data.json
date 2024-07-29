@@ -1,10 +1,10 @@
 {
     "options": ["Select User", "Role Permission", "User Roles", "Section Configurations"],
-    "count": 4,
     "timeOutMin" : 3000,
-    "timeoutMedium" : 5000,
-    "timeoutMax" : 1000,
+    "timeOutMedium" : 5000,
+    "timeOutMax" : 60000,
     "select": "Select User",
     "role": "Select Role",
-    "name" : "Sachin"
+    "name" : "Sachin",
+    "selectRole": "LEA_Data_Admin"
 }
