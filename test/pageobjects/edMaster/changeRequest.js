@@ -1,90 +1,77 @@
 import Common from "./common.js";
-import time from "../../testData/timeout.json" assert{type:"json"}
+import data from "../../testData/data.json" assert{type:"json"}
 class ChangeRequest extends Common{
     constructor(){
         super();
-        this.$addRequestInPanel=()=>$(`//a[@href="/AddRequest"]`);
-        this.$approvalInPanel=()=>$(`//a[@href="/ApproverSummary"]`);
-        this.$addRequestButton=()=>$(`//span[@class="add-request-title"]`);
-        this.$educationHeader=()=>$(`//span[contains(text(),"Organization")]`);
-        this.$categoryHeader=()=>$(`//span[contains(text(),"Category")]`);
-        this.$dateHeader=()=>$(`//span[contains(text(),"Date")]`);
-        this.$selectingDropdown=(name)=>$(`//span[contains(text(),"${name}")]/../following-sibling::div//label`);
-        this.$selectingFromDropdown=(institution)=>$(`//li[@aria-label="${institution}"]`);
-        this.$institutionName=()=>$(`//span[@class="add-request-organization-name"]`);
-        this.$futureButton=()=>$(`//div[@class="rz-radio-btn"]/following-sibling::div`);
-        this.$dateButton=()=>$(`//button[contains(@class,"rz-datepicker-trigger rz-calendar-button")]/..`);
-        this.$monthTab=()=>$(`//li[@aria-label="July"]//ancestor::div[@class="rz-dropdown"]`);
-        this.$month=(month)=>$(`//li[@aria-label="${month}"]`);
-        this.$yearTab=()=>$(`(//div[@class="rz-datepicker-title"]//label[contains(@class,"rz-dropdown-label rz-inputtext ")])[2]`);
-        this.$year=()=>$(`(//div[@class="rz-datepicker-title"]//label[contains(@class,"rz-dropdown-label rz-inputtext ")])[2]`);
-        this.$day=(day)=>$(`//span[contains(text(),"${day}")]`);
-        this.$icons=(name)=>$(`//p[text()="${name}"]`);
-        this.$educationHeader=()=>$(`//div[@class="search-education-title"]/span[contains(text(),"Education")]`);
-        this.$closeButton=()=>$(`//div[@class="rz-card rz-variant-text"]/following-sibling::div[@class="approval-button-actions"]//span[normalize-space()="Close"]`);
-        this.$calendarButton=()=>$(`//span//input[@class="rz-inputtext  rz-readonly"]`);
-        this.$calenderDates=(day)=>$(`//span[text()="${day}"]/parent::td`);
+        this.$addRequestButton=()=>$(`//button//span[normalize-space()="Add Request"]/..`);
+        this.$fieldHeaders=(data)=>$(`//span[normalize-space()="${data}"]/..`);
+        this.$fields=(data)=>$(`//span[normalize-space()="${data}"]/../following-sibling::div`);
+        this.$fieldValue=(name)=>$(`//li//span[normalize-space()="${name}"]/..`);
+        this.$date=(date)=>$(`//span[text()="${date}"]`);
+        this.$futureButton=()=>$(`//span[normalize-space()="Effective Date"]/../following-sibling::div//label[text()="Future"]/..`);
+        this.$calendarButton=()=>$(`//span[normalize-space()="Effective Date"]/../following-sibling::div//div[@class="add-input"]`);
+        this.$yearTab=()=>$(`(//div[@class="rz-datepicker-title"]//label[@class="rz-dropdown-label rz-inputtext "]/..)[2]`);
+        this.$monthTab=()=>$(`(//div[@class="rz-datepicker-title"]//label[@class="rz-dropdown-label rz-inputtext "]/..)[1]`);
+        this.$dropdownValue=(value)=>$(`//li[@aria-label="${value}"]`);
+        this.$organizationAndCategoryValidationLocator=(value)=>$(`//div[@class="add-request-navigation-data"]//span[text()="${value}"]`);
+        this.$organizationCategoriesIcon=()=>$(`//p[text()="Organization Categories"]/../..`);
+        this.$popUpHeaders=(value)=>$(`(//div[@class="rz-dialog-content"]//span[text()="${value}"]/..)[1]`);
+        this.$popUpFields=(value)=>$(`(//label[text()="${value}"]/following-sibling::div)[1]`);
+        this.$popUpFieldValues=(value)=>$(`(//span[text()="${value}"]/..)[2]`);
+        this.$submitButton=()=>$(`(//button[@type="submit"])[1]`);
     }
-
-    /**
-     * This function is for clicking the add request Button and waiting for the page to get load.
+     /**
+     * This function is for clicking the Add Request button.
      */
-    async addingRequest(){
+    async clickingAddRequest(){
         await this.$addRequestButton().click();
-        await this.$educationHeader().waitForDisplayed({timeout:time.med,timeoutMsg:"Field for selecting education is not yet displayed."});
-        await this.$categoryHeader().waitForDisplayed({timeout:time.med,timeoutMsg:"Field for selecting category is not yet displayed."});
-        await this.$dateHeader().waitForDisplayed({timeout:time.med,timeoutMsg:"Field for selecting date is not yet displayed."});
     }
-
     /**
-     * This function is for selecting the educational institution.
-     * @param {string} education 
-     */
-    async selectingInstitution(education){
-        await this.$selectingDropdown("Education").click();
-        await this.$selectingFromDropdown(education).click();
-        await this.$institutionName().waitForDisplayed({timeout:time.med,timeoutMsg:"Institution name is not displayed."})
-    }
-
-    /**
-     * This function is for selecting the category.
+     * This function is for entering values to the fields.
+     * @param {string} organisation 
      * @param {string} category 
+     * @param {number} expectDate 
      */
-    async selectingCategory(category){
-        await this.$selectingDropdown("Category").click();
-        await this.$selectingFromDropdown(category).click();
-    }
-
-
-    /**
-     * This function is for selecting the date.
-     */
-    async selectDate() {
-        await this.$futureButton().click()
+    async enteringValuesToFields(organisation,category,expectDate){
+        await this.$fields("Education Organization").click()
+        await this.$fieldValue(organisation).click();
+        await this.$fields("Category").click()
+        await this.$fieldValue(category).click();
+        await this.$futureButton().click();
         await this.$calendarButton().click();
-        let previousDays = [];
-        let dateFunction = new Date();
-        let currentDay = dateFunction.getDate();
-   
-        for (let day = 1; day < currentDay; day++) {
-            previousDays.push(day);
+        await this.$monthTab().click();
+        let expectedDate=new Date(expectDate);
+        console.log("date ",expectedDate)
+        let expectedMonth=expectedDate.getMonth()+1;
+        console.log("month ",expectedMonth)
+        let date=expectedDate.getDate();
+        let expectedYear=expectedDate.getFullYear();
+        let month=data.months[expectedMonth];
+        console.log("month:: ",month)
+        await this.$dropdownValue(month).scrollIntoView();
+        await this.$dropdownValue(month).click();
+        await this.$yearTab().click();
+        await this.$dropdownValue(expectedYear).scrollIntoView();
+        await this.$dropdownValue(expectedYear).click();
+        await this.$date(date).click();
+    }
+    /**
+     * This function is for clicking the Organization categories Icon.
+     */
+    async clickingOrganizationCategoryIcon(){
+        await this.$organizationCategoriesIcon().click();
+    }
+     /**
+     * This function is for entering values.
+     */
+    async enteringValuesInBox(){
+        let length=data.popupFields.length
+        for(let i=0;i<length;i++){
+            await this.$popUpFields(data.popupFields[i]).click();
+            await this.$popUpFieldValues(data.popupValues[i]).click();
         }
-   
-        console.log(previousDays);
-        await this.$calenderDates(currentDay + 1).click();
-   
-        return previousDays;
+        await this.$popUpFields("ReasonForChange").setValue("test");
+        await this.$submitButton().click();
     }
- 
-    async clickingOnOrganizationCategoryIcon(name){
-        await this.$icons(name).click();
-    }
-    async closing(){
-        await this.$closeButton().scrollIntoView();
-        await this.$closeButton().click();
-
-    }
-
- 
 }
 export default new ChangeRequest();

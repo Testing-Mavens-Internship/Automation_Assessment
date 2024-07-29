@@ -1,0 +1,6 @@
+{
+    "headers":["Education Organization","Category","Effective Date"],
+    "months":["January","February","March","April","May","June","July","August","September","October","November","December"],
+    "popupFields":["Operational Status","School Category","School Type","Medium of Instruction","Title | Status","Accreditation Status"],
+    "popupValues":["Future","Elementary School","Alternative","Face-to-face instruction","Missing","Not State Accredited"]
+}

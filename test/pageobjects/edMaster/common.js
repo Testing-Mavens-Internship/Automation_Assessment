@@ -1,15 +1,17 @@
-export default class Common {
+
+export default class Common{
     constructor(){
-        this.$homePageLogo=()=>$(`//img[@src="images/logo.svg"]`);
-        this.$userName=(userName)=>$(`//label[text()="${userName}"]`);
-        this.$defaultLoadingSpinner=()=>$(`//div[@class="lds-spinner"]/..`);
-        this.$advancedFilter=()=>$(`//span[contains(.,"Advanced Filter")]`);
+        this.$logo=()=>$(`//img[@src="images/logo.svg"]/parent::div`);
+        this.$advancedFilterOption=()=>$(`//span[normalize-space()="Advanced Filter"]`);
+        this.$selectedUSer=(user)=>$(`//label[text()="${user}"]`);
+        this.$loadingSpinner=()=>$(`//div[@class="lds-spinner"]`);
     }
     /**
-     * It if for loading the url.
+     * This function is for launching the url.
      */
-    async launchUrl(){
+    async launchingTheUrl(){
         await browser.maximizeWindow();
-        await browser.url(`https://web-edmaster-test-wtus-ui-01.azurewebsites.net/`)
+        await browser.url("https://web-edmaster-test-wtus-ui-01.azurewebsites.net/");
+        await this.$advancedFilterOption().waitForDisplayed({timeout:60000,timeoutMsg:"Page is not yet loaded."});
     }
 }
