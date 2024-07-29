@@ -22,7 +22,8 @@ export const config = {
     //
     specs: [
         // './test/specs/**/*.js'
-        './test/specs/edWiseSpec/edWise.spec.js'
+        // './test/specs/edWiseSpec/edWise.spec.js'
+        './test/specs/finalAssessmentEdWiseSpec/edWise.spec.js'
     ],
     // Patterns to exclude.
     exclude: [
