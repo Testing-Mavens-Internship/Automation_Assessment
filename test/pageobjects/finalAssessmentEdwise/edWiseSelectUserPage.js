@@ -18,7 +18,7 @@ class SelectUser extends Common
     async selectUserAndRole()
     {
         await this.$selectUser(1).click()
-        // await this.$userOption().scrollIntoView()
+        await this.$userOption().scrollIntoView()
         await this.$userOption().waitForDisplayed({timeout:40000,timeoutMsg:"Header still not displayed"})
         await this.$userOption().waitForClickable();
         await this.$userOption().click()
