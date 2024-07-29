@@ -1,172 +1,97 @@
 import landingPage from "../pageobjects/EdWise/landingPage.js"
 import selectUserPage from "../pageobjects/EdWise/selectUserPage.js"
-import changeReqPage from "../pageobjects/EdWise/changeReqPage.js"
-
+import changeRequestsPage from "../pageobjects/EdWise/changeRequestsPage.js"
 
 describe('To verify workflow of EdWise website', () => {
-
     it('Launch URL in browser', async () => {
         await landingPage.loadUrl()
         expect(await landingPage.$header()
         .isDisplayed()).withContext('Expect header is not displayed')
         .toBeTrue()
+        //await browser.pause(10000)
     })
 
-    it('Click on "Configuration" and validate 4 options are displayed', async () => {
-       await landingPage.clickConfiguration()
-       //validate 4 options
-     })
+    it('Wait for spinner to close and validate "Advanced Filter" to be displayed', async () => {
+        await landingPage.waitSpinnerToEnd()
+        expect(await landingPage.$advancedFilter()
+        .isDisplayed()).withContext('Expect "Advanced Filter" is not displayed')
+        .toBeTrue()
+      })
 
-    it('Click on "Select User" option from landing page and validate user and role dropdowns', async () => {
+    it('Click on "Configuration" and validate "Select User" option', async () => {
+        await landingPage.clickConfiguration()
+        await landingPage.$selectUserOption().waitForDisplayed({timeout : 5000, timeoutMsg: 'Could not find  "Select User" option within the requested time'})
+        expect(await landingPage.$selectUserOption()
+        .isDisplayed()).withContext('Expect "Select User" is not displayed')
+        .toBeTrue()
+      })
+
+      it('Click on Select User option and validate "Select User" dropdown is present', async () => {
         await landingPage.clickSelectUser()
+        await selectUserPage.$selectUserDropDown().waitForDisplayed({timeout : 5000, timeoutMsg: 'Could not find  "Select User" dropdown within the requested time'})
         expect(await selectUserPage.$selectUserDropDown()
         .isDisplayed()).withContext('Expect "Select User" dropdown is not displayed')
         .toBeTrue()
+      })
+
+      it('Validate "Select Role" dropdown is present', async () => {
+        await selectUserPage.$selectRoleDropDown().waitForDisplayed({timeout : 5000, timeoutMsg: 'Could not find  "Select Role" dropdown within the requested time'})
         expect(await selectUserPage.$selectRoleDropDown()
         .isDisplayed()).withContext('Expect "Select Role" dropdown is not displayed')
         .toBeTrue()
-    })
+      })
 
-    it('Select values from both dropdowns', async () => {
+      it('Enter values in dropdowns and click Select button', async () => {
         await selectUserPage.selectValuesFromDropdowns()
-        expect(await changeReqPage.$selectedUserName()
-        .isDisplayed()).withContext('Expect selected username "Sachin" is not displayed')
+        expect(await changeRequestsPage.$selectedUserName()
+        .isDisplayed()).withContext('Expect "Sachin" is not displayed as selected user')
         .toBeTrue()
-        expect(await changeReqPage.$addReqOption()
-        .isDisplayed()).withContext('Expect "Add Request" option is not displayed')
+      })
+
+      it('Click on "Add Request" button', async () => {
+        await changeRequestsPage.clickOnAddRequest()
+        expect(await changeRequestsPage.$changeRequestsHeader()
+        .isDisplayed()).withContext('Expect "Change Requests" header is not displayed')
         .toBeTrue()
-        expect(await changeReqPage.$approvalQueueOption()
-        .isDisplayed()).withContext('Expect "Approval Queue" option is not displayed')
+      })
+
+      it('Enter values in dropdowns in Change Requests page', async () => {
+        await changeRequestsPage.clickEducationalOrganizationDropdown()
+        await changeRequestsPage.$alpineHeader().waitForDisplayed({timeout : 5000, timeoutMsg: 'Could not find  "Alpine Elementary District" within the requested time'})
+        expect(await changeRequestsPage.$alpineHeader()
+        .isDisplayed()).withContext('Expect "Alpine Elementary District" is not displayed')
         .toBeTrue()
-    })
+      })
 
-    it('Click on "Add Request" option and validate texts', async () => {
-        await changeReqPage.clickOnAddReq()
-        expect(await changeReqPage.$eduOrgText()
-        .isDisplayed()).withContext('Expect "Education Organization" is not displayed')
+      it('Make radio button as "future"', async () => {
+        await changeRequestsPage.clickFutureRadioButton()
+        //calendar enabled validation
+      })
+
+      it('Click Calendar and select date as "Aug 15, 2025"', async () => {
+        await changeRequestsPage.clickCalendar()
+        expect(await changeRequestsPage.$organizationCategories()
+        .isDisplayed()).withContext('Expect "Organization Categories" is not displayed')
         .toBeTrue()
-        expect(await changeReqPage.$categoryText()
-        .isDisplayed()).withContext('Expect "Category" is not displayed')
-        .toBeTrue()
-        expect(await changeReqPage.$effectiveDateText()
-        .isDisplayed()).withContext('Expect "Effective Date" is not displayed')
-        .toBeTrue()
-    })
+      })
 
-    it('Click on "Education Organization" dropdown and validate all options from dropdown', async () => {
-        await changeReqPage.clickEduOrgDropdown()
-        //validate all dropdown options
-    })
+      it('Click "Organization Categories" tab and validate selected school is displayed', async () => {
+        let alpineActual= changeRequestsPage.$alpineHeader().getText()
+        let alpineExpected= changeRequestsPage.$alpineElementaryDistrictHeader.getText()
+        await changeRequestsPage.clickOrganizationCategories()
+        expect(alpineActual).isEqual(alpineExpected)
+      })
 
-    it('Select "Alpine Elementary District" from Education Organization dropdown ', async () => {
-        await changeReqPage.selectEduOrgOption()
-        //validate Address, Phone etc boxes came or not
-    })
+      it('Fill details in "Organization Categories"', async () => {
+        await changeRequestsPage.enterValues()
+        const grade1After = await changeRequestsPage.$grade1()
+        const grade1Color = await grade1After.getCSSProperty('color')
+        expect(grade1Color.value).toBe('rgba(255,0,0)')
+        const grade2After = await changeRequestsPage.$grade2()
+        const grade2Color = await grade2After.getCSSProperty('color')
+        expect(grade2Color.value).toBe('rgba(255,0,0)')
+      })
 
-    it('Click "Category" dropdown and validate all options from dropdown', async () => {
-        await changeReqPage.clickEduOrgDropdown()
-        //validate all dropdown options
-    })
 
-    it('Select "Charter Authorizer" from Category dropdown ', async () => {
-        await changeReqPage.selectCategoryOption()
-        //validate Relationships, Networks etc boxes came or not
-    })
-
-    it('Select Effective Date as "future" and validate calendar icon is enabled', async () => {
-        await changeReqPage.clickFutureRadioButton()
-        expect(await changeReqPage.$calendar()
-        .isDisplayed()).withContext('Expect calendar icon is not displayed')
-        .toBeTrue()
-    })
-
-    it('Click on calendar and validate previous and future month dates are disabled', async () => {
-        await changeReqPage.clickCalendar()
-        //validate previous and future month dates are disabled
-    })
-
-    it('Pick a date from calendar', async () => {
-        await changeReqPage.pickDate()
-        //no validation
-    })
-
-    it('Click on "Organization Categories" box and validate "Category" and "Section" are same as selected', async () => {
-        await changeReqPage.clickOrgCategories()
-        expect(await changeReqPage.$category()
-        .isDisplayed()).withContext('Expect category is not same as selected from dropdown')
-        .toBeTrue()
-        expect(await changeReqPage.$section()
-        .isDisplayed()).withContext('Expect section is not same as selected from dropdown')
-        .toBeTrue()
-    })
-
-    it('Click "Close" and validate "Change Requests" header', async () => {
-        await changeReqPage.clickCloseButton()
-        expect(await changeReqPage.$changeRequestHeader()
-        .isDisplayed()).withContext('Expect "Change Requests" header is not displayed ')
-        .toBeTrue()
-    })
-
-    it('Click on "Add Request" option again and validate texts', async () => {
-        await changeReqPage.clickOnAddReq()
-        expect(await changeReqPage.$eduOrgText()
-        .isDisplayed()).withContext('Expect "Education Organization" is not displayed')
-        .toBeTrue()
-        expect(await changeReqPage.$categoryText()
-        .isDisplayed()).withContext('Expect "Category" is not displayed')
-        .toBeTrue()
-        expect(await changeReqPage.$effectiveDateText()
-        .isDisplayed()).withContext('Expect "Effective Date" is not displayed')
-        .toBeTrue()
-    })
-
-    it('Click on "Education Organization" dropdown again and validate all options from dropdown', async () => {
-        await changeReqPage.clickEduOrgDropdown()
-        //validate all dropdown options
-    })
-
-    it('Select "Alpine Elementary District" from Education Organization dropdown ', async () => {
-        await changeReqPage.selectEduOrgOption()
-        //validate Address, Phone etc boxes came or not
-    })
-
-    it('Click "Category" dropdown again and validate all options from dropdown', async () => {
-        await changeReqPage.clickEduOrgDropdown()
-        //validate all dropdown options
-    })
-
-    it('Select "Charter Authorizer" from Category dropdown ', async () => {
-        await changeReqPage.selectCategoryOption()
-        //validate Relationships, Networks etc boxes came or not
-    })
-
-    it('Select Effective Date as "future" and validate calendar icon is enabled', async () => {
-        await changeReqPage.clickFutureRadioButton()
-        expect(await changeReqPage.$calendar()
-        .isDisplayed()).withContext('Expect calendar icon is not displayed')
-        .toBeTrue()
-    })
-
-    it('Click on calendar and validate previous and future month dates are disabled', async () => {
-        await changeReqPage.clickCalendar()
-        //validate previous and future month dates are disabled
-    })
-
-    it('Pick a date from calendar', async () => {
-        await changeReqPage.pickDate()
-        //no validation
-    })
-
-    it('Click on "Relationships" box and validate "Add Relationships" button is present', async () => {
-        await changeReqPage.clickRelationships()
-        expect(await changeReqPage.$addRelationshipButton()
-        .isDisplayed()).withContext('Expect "Add Relationships" button is not present')
-        .toBeTrue()
-    })
-
-    it('Click on "Add Relationships" button validate warning messages', async () => {
-        await changeReqPage.clickAddRelationshipsButton()
-        //validate warnings
-    })
 
 })

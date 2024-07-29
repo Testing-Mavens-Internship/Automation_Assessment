@@ -5,9 +5,18 @@ class LandingPage extends CommonPage {
     constructor()
     {
         super()
-        this.$advancedFilter=()=> $('//span[@class="d-inline-flex align-items-center align-middle"]')
+        this.$spinner=()=> $('/html/body/div[2]/div[2]/div[3]/div/fieldset/legend/a/div/div')
+        this.$advancedFilter=()=> $('/html/body/div[2]/div[2]/div[3]/div/fieldset/legend/a/div/span[2]')
         this.$configuration=()=> $('//div[@class="rz-navigation-item-link"]')
-        this.$selectUserOption=()=> $('//span[text()="Select User"]')
+        this.$selectUserOption=()=> $('/html/body/div[2]/div[1]/ul/li[3]/ul/li[1]/div/a')
+    }
+
+    /**
+     * Wait for spinner to close and "Advance Filter" to be displayed
+     */
+    async waitSpinnerToEnd()
+    {
+        await this.$spinner().waitForDisplayed({timeout:50000, reverse:true})
     }
 
     /**
@@ -15,9 +24,7 @@ class LandingPage extends CommonPage {
      */
     async clickConfiguration()
     {
-        //await this.$advancedFilter().waitForDisplayed({reverse:true})
         await this.$configuration().click()
-        await this.$selectUserOption().waitForDisplayed({timeout : 5000})
     }
 
     /**
@@ -27,7 +34,6 @@ class LandingPage extends CommonPage {
     {
         await this.$selectUserOption().click()
     }
-
 }
 
 export default new LandingPage()
