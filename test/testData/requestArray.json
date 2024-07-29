@@ -1,0 +1,18 @@
+{
+    "timeout":30000,
+    "requestArray": [
+        "Address",
+        "Phone",
+        "Website",
+        "Organization Categories",
+        "Identification Codes",
+        "Indicators",
+        "Characteristics",
+        "Relationships",
+        "Networks",
+        "Programs",
+        "Documents"
+
+    ]
+}
+
