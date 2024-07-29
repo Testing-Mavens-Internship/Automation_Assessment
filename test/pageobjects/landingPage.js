@@ -1,63 +1,55 @@
-import CommonPage from "./commonPage.js";
-import data from '../testData/timeout.json' assert {"type":"json"}
+import CommonPage from "./commonPage.js"
+import data from "../testData/timeout.json" assert {"type" :"json"}
+
 
 class LandingPage extends CommonPage{
-
-    constructor()
-    {
-        super();
-        this.$configurationsIcon = () =>$('//div[@class="rz-navigation-item-link"]')
-        this.$$configurationsDropDowns = () =>$$('//li[@class="rz-navigation-item config-sub-link"]')
-        this.$selectUserIcon = () =>$('//span[@class="rz-navigation-item-text" and text()="Select User"]')
-        this.$selectUserText = () =>$('(//label[@class="rz-dropdown-label rz-inputtext  rz-placeholder" and text()="Select User"])[1]')
-        this.$selectRoleText = () =>$('(//label[@class="rz-dropdown-label rz-inputtext  rz-placeholder" and text()="Select Role"])[1]')
-
+    constructor(){
+        super()
+        this.$loader = () => $('//div[@class="loader-home"]//div[@class="lds-spinner"]');
+        this.$configurationOption=()=>$(`//span[text()="Configurations"]/../.`)
+        this.$$configurationList=()=>$$(`//ul[@class="rz-navigation-menu"]//li//a//span`)
+        this.$selectUserOption=()=>$(`//span[text()="Select User"]/..`)
     }
 
     /**
-     *  select the 'Configurations' option from landingPage
+     * click on the configurations option
      */
-
-     async selectConfigurations()
-     {
-        await this.$configurationsIcon().waitForDisplayed({timeout :data.timeoutKey.midTimeout, timeoutMsg : "The Icon is not displayed"})
-        await this.$configurationsIcon().waitForClickable({timeout :data.timeoutKey.midTimeout, timeoutMsg : "The Icon is not displayed"})
-        await this.$configurationsIcon().click();
-
+    async clickOnConfigurations(){
+        await this.$configurationOption().click()
     }
+
+   
     /**
-     * Fetch the items in the Configurations Dropdown
+     * Fetch the elements in the configurations dropdown section
      * @returns {array}
      */
-
-    async fetchConfigurationsDropdownItems()
-    {
-        let array=[];
-
-        let items=await this.$$configurationsDropDowns();
-
-        for(let item of items)
-
+        async fetchConfigurationsDropdownItems()
         {
-            await item.waitForDisplayed({ timeout:data.timeoutKey.midTimeout ,timeoutMsg : "The Items are not displayed" });
-            expect(await item.isDisplayed()).toBe(true);
-            let itemsFetched = (await item.getText()).trim()
-            array.push(itemsFetched);
-        }
-        return array;
-
+            let array=[];
         
+            let items=await this.$$configurationList();
+        
+            for(let item of items)
+        
+            {
+                await item.waitForDisplayed({ timeout:data.timeoutKey.midTimeout ,timeoutMsg : "The Items are not displayed" });
+                expect(await item.isDisplayed()).toBe(true);
+                let itemsFetched = (await item.getText()).trim()
+                array.push(itemsFetched);
+            }
+            return array;
+        
+            
+        }
+/**
+ * click the 'select user' icon
+ */
+        async clickSelectUser(){
+            await this.$selectUserOption();
+        }
+       
     }
 
-    /**
-     * click on the 'Select User' Icon 
-     */
+    
 
-    async getTextOfInputBoxes()
-    {
-        await this.$selectUserIcon().click();
-    }
-
-}
-
-export default new LandingPage();
+export default new LandingPage()

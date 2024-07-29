@@ -8,6 +8,8 @@ export default class CommonPage
         this.$reasonText = () =>$('//textarea[@name="ReasonForChange"])[1]')
         this.$saveButton = () =>$('(//span[@class="save-title"])[1]')
         this.$errorMessageForReasonForChange =()=>$('//div[@class="rz-message rz-messages-error "]')
+        this.$loader=()=>$(`//div[@class="view-cr-loader"]//child::div[@class="lds-spinner"]`)
+       
     
     }
 
@@ -20,24 +22,15 @@ export default class CommonPage
         browser.maximizeWindow();
     }
 
-    /**
+     /**
      * Generates Random Text for the 'Reason for Change' option
      * @returns {string}
      */
 
-    async randomText()
-    {
-        let number=Math.floor(Math.random()*11)
-        return `RANDOM${number}`
-    }
+     async randomText()
+     {
+         let number=Math.floor(Math.random()*11)
+         return `RANDOM${number}`
+     }
 
-    /**
-     * Click on the 'Save' button
-     */
-    
-    async clickOnSaveButton()
-    {
-        await this.$saveButton().click();
-    }
-     
 }

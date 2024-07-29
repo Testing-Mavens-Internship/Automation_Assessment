@@ -1,7 +1,6 @@
 
-
 import CommonPage from "./commonPage.js";
-import data from '../testData/timeout.json' assert {"type":"json"}
+
 
 class AddOrganizationsPage extends CommonPage{
 
@@ -12,6 +11,7 @@ class AddOrganizationsPage extends CommonPage{
        
     }
 
+    
    
 /**
  * Fill the Reason for Change
@@ -43,22 +43,13 @@ class AddOrganizationsPage extends CommonPage{
             
             }
 
-            /**
-             * upload a large file which is greater than 10mb
-             */
+/**
+ * click on save button
+ */
 
-         async fileUploadThreeForOrganizations() {
+        async clickOnSaveButton() {
+            await this.$saveButton().click();
+        }
 
-                const filePath = 'upload/largeFile.pdf';
-                const remoteFilePath = await browser.uploadFile(filePath)
-                await this.$chooseFile().setValue(remoteFilePath)
-                
-                }
-
-                
-  
-    
-
-}
-
+    }
 export default new AddOrganizationsPage();
