@@ -3,20 +3,17 @@ export default class Common
 {
     constructor()
     {
-        this.$username=()=>$(`//label[text()='Username']`)
-        this.$config=()=>$(`//div[@class="rz-navigation-item-link"]`)
+        this.$heading=()=>$(`//label[text()='Username']`)
         this.$spinner=()=>$(`//div[@class="loader-home"]/div[@class="lds-spinner"]`)
-        this.$add_req=()=>$(`//a[@href="/AddRequest"]`)
     }
+
+    /**
+     * Method to launch URL
+     */
     async launchURL()
     {
+        await this.$spinner().waitForDisplayed({reverse:true})
         await browser.url('https://web-edmaster-test-wtus-ui-01.azurewebsites.net/')
         await browser.maximizeWindow()
-        await this.$spinner().waitForDisplayed({reverse:true})
-    }
-    async clickConfiguration()
-    {
-        await this.$config().waitForDisplayed({timeout:3000})
-        await this.$config().click()
     }
 }
