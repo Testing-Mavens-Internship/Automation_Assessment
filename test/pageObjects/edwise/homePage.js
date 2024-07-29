@@ -1,4 +1,5 @@
 import CommonPage from "./common.js";
+
 class HomePage extends CommonPage {
     constructor() {
         super();
@@ -7,6 +8,7 @@ class HomePage extends CommonPage {
         this.$$elements=()=>$$('//li[@class="rz-navigation-item config-sub-link"]//span[@class="rz-navigation-item-text"]');
         this.$element=(index)=>$(`(//li[@class="rz-navigation-item config-sub-link"]//span[@class="rz-navigation-item-text"])[${index}]`);
         this.$selectUser=()=>$('//a[@href="/SelectUser"]');
+
     }
     /**
      * Click on configuration and validate the dropdown elements
@@ -14,22 +16,20 @@ class HomePage extends CommonPage {
      */
     async clickConfiguration(){
         
-        await this.$configuration().click();
-        let arrayElements=[]
+        await this.clickButton(this.$configuration());
+        let dropDownElements=[]
         for(let i=1;i<=await this.$$elements().length;i++){
-            arrayElements.push(await this.$element(i).getText())
+            dropDownElements.push(await this.$element(i).getText())
         }
-        console.log(arrayElements)
-        await this.$selectUser().waitForDisplayed({timeout:10000,timeoutMsg:'select user is not displayed'});
-        return arrayElements
+         await this.$selectUser().waitForDisplayed({timeout:30000,timeoutMsg:'select user is not displayed'});
+        return dropDownElements;
         
     }
-
-/**
- * Click on select user 
- */
+    /**
+    * Click on select user 
+    */
     async clickSelectUser(){
-        await this.$selectUser().click();
+        await this.clickButton(this.$selectUser());
     }
 }
 export default new HomePage();

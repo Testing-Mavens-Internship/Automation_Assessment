@@ -1,8 +1,8 @@
 import CommonPage from "./common.js";
+
 class ChangeRequest extends CommonPage{
     constructor(){
         super();
-        this.$changeRequestHeader=()=>$('//div[@class="wizard-steps"]');
         this.$addRequestIcon=()=>$('//img[@class="add-request-icon"]');
         this.$addRequestOption=()=>$('//a[@href="/AddRequest"]');
         this.$spinner=()=>$('//div[@class="lds-spinner"]')
@@ -12,7 +12,7 @@ class ChangeRequest extends CommonPage{
      */
     async clickAddRequest(){
         
-        await this.$addRequestOption().click();
+        await this.clickButton(this.$addRequestOption());
         await this.$spinner().waitForDisplayed({reverse:true,timeout:30000,timeoutMsg:'spinner is not displayed'});
     }
 }
