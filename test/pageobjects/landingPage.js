@@ -1,7 +1,5 @@
 import Common from "./common.js";
-import data from "../../testData/data.json" assert{type:"json"}
-
-class LandingPage extends Common{
+class Landing extends Common{
     constructor(){
         super()
         this.$loader=()=>$(`//div[@class="loader-home"]//div[@class="lds-spinner"]`)
@@ -9,29 +7,30 @@ class LandingPage extends Common{
         this.$$configurationList=()=>$$(`//ul[@class="rz-navigation-menu"]//li//a//span`)
         this.$selectUserOption=()=>$(`//span[text()="Select User"]/..`)
     }
-
     /**
-     * method to click on configurations menu
+     * method To click Configuration
      */
     async clickConfigurations(){
         await this.clickButton(this.$configurationOption())
-    }
-
+        }
     /**
-     * method to get the list of items under the configurations menu
-     * @returns array contains list items under the configurations menu item
-     */
+     *  method To ValidateConfigurationList
+     * @returns array Contain List Under the Configuration
+      */
     async validateConfigurationsList(){
         let listItems= await this.validateDropdownList(this.$$configurationList())
         return listItems
-    }
-
-    /**
-     * method to click on select user menu
+        }
+     /**
+      * method To Click SelectUser
      */
     async clickSelectUser(){
-        await this.clickButton(this.$selectUserOption())
+        await this.clickButton(this.$selectUserOption());
     }
     
-}
-export default new LandingPage()
+    }
+    export default new Landing();
+
+
+    
+

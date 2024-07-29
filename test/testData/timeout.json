@@ -1,3 +1,46 @@
 {
-    "time":"5000"
+    "time":"15000",
+    "configurations":["Select User","Role Permission","User Roles","Section Configurations"],
+    "changeRequest":["Add Request","Approval Queue"],
+    "Labels":["Education Organization","Category","Effective Date"],
+    "educationOrganizationDetails":[
+        "Alpine Elementary District",
+        "Apache Elementary District",
+        "Arizonans For Children - East Valley Center",
+        "Bisbee Unified District",
+        "Bowie Unified District",
+        "Cochise Elementary District",
+        "Concho Elementary District",
+        "Double Adobe Elementary District",
+        "Douglas Unified District",
+        "Fort Huachuca Accommodation District",
+        "Intelli-School, Inc.",
+        "Mcnary Elementary District",
+        "Naco Elementary District",
+        "Pioneer Elementary School",
+        "San Simon Unified District",
+        "Sierra Vista Unified District",
+        "St David Unified District",
+        "Tombstone Unified District",
+        "Vernon Elementary District",
+        "Willcox Unified District",
+        "Window Rock Charter Schools"
+        ],
+    "categoryList":[
+            "Charter Authorizer",
+            "Charter Management Organization",
+            "Community Provider",
+            "Education Preparation Provider",
+            "Education Service Center",
+            "Local Education Agency",
+            "Organization Department",
+            "Post Secondary Institution",
+            "School",
+            "State Agency",
+            "State Education Agency"
+            ]
+    
 }
+
+
+                     
