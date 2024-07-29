@@ -4,8 +4,7 @@ import data from "../../testData/data.json" assert{type:"json"}
 class SelectUserPage extends Common{
     constructor(){
         super()
-        this.$selectUserLabel=()=>$(`(//label[text()="Select User"])[1]`)
-        this.$selectRoleLabel=()=>$(`(//label[text()="Select Role"])[1]`)
+        this.$selectDropdown=(text)=>$(`//div[contains(@class,"rz-p-md-12")]//label[text()="${text}"]`)
         this.$optionSachin=()=>$(`(//div//ul//li[@aria-label="Sachin"]//span)[2]`)
         this.$loader=()=>$(`//div[@class="view-cr-loader"]//child::div[@class="lds-spinner"]`)
         this.$optionLEA_Data_Admin=()=>$(`(//div//ul//li[@aria-label="LEA_Data_Admin"]//span)[2]`)
@@ -13,42 +12,38 @@ class SelectUserPage extends Common{
     }
 
     /**
-     * method to click on select user input field
-     * @returns string
+     * method to click on select user dropdown
      */
-    async clickSelectUserInput(){
-        await this.clickButton(this.$selectUserLabel())
-        await this.$optionSachin().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Option sachin still not displayed"})
-        let sachin=await this.$optionSachin().getText()
-        return sachin
+    async clickSelectUser(){
+        await this.clickButton(await this.$selectDropdown("Select User"))
+        await this.$optionSachin().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Option still not displayed"})
     }
 
     /**
-     * method to select the option sachin
+     * method to select option sachin
      */
-    async clickOptionSachin(){
+    async selectOptionSachin(){
         await this.clickButton(this.$optionSachin())
+        await this.$loader().waitForDisplayed({timeout:data.timeout,reverse:true,timeoutMsg:"loader still displayed"})
+        await this.$selectDropdown("Select Role").waitForDisplayed({timeout:data.timeout,timeoutMsg:"Dropdoen still not displayed"})
     }
 
     /**
-     * method to click on select role input field
-     * @returns string
+     * method to click on select role dropdown
      */
-    async clickSelectRoleInput(){
-        await this.clickButton(this.$selectRoleLabel())
-        await this.$optionLEA_Data_Admin().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Option LEA_Data_Admin still not displayed"})
-        let LEA_Data_Admin=await this.$optionLEA_Data_Admin().getText()
-        return LEA_Data_Admin
+    async clickSelectRole(){
+        await this.clickButton(await this.$selectDropdown("Select Role"))
+        await this.$optionLEA_Data_Admin().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Option still not displayed"})
     }
 
     /**
-     * method to select the option LEA_Data_Admin 
+     * method to select  option LEA_Data_Admin
      */
-    async clickOptionEA_Data_Admin(){
+    async selectOptionLEA_Data_Admin(){
         await this.clickButton(this.$optionLEA_Data_Admin())
         await this.$selectButton().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Button still not displayed"})
     }
-    
+
     /**
      * method to click on select button
      */

@@ -1,14 +1,9 @@
 import Common from "./common.js";
 
-class ChangeRequest extends Common{
+class ChangeRequestPage extends Common{
     constructor(){
         super()
-        this.$changeRequestHeader=()=>$(`//h6[text()="Change Requests"]`)
-        this.$loader=()=>$(`//div[@class="cr-loader-home"]//div[@class="lds-spinner"]`)
-        this.$addRequestMenu=()=>$(`//a[@href="/AddRequest"]//span`)
-        this.$approvalMenu=()=>$(`//a[@href="/ApproverSummary"]//span`)
-        this.$usernameHeader=()=>$(`//label[text()="Sachin"]`)
-        this.$addRequestButton=()=>$(`(//span[text()="Add Request"]/..)[2]`)
+        this.$addRequestButton=()=>$(`//button//span[text()="Add Request"]`)
     }
 
     /**
@@ -18,4 +13,4 @@ class ChangeRequest extends Common{
         await this.clickButton(this.$addRequestButton())
     }
 }
-export default new ChangeRequest()
+export default new ChangeRequestPage()

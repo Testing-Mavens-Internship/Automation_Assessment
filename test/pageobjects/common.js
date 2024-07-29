@@ -2,7 +2,6 @@ import data from "../../testData/data.json" assert{type:"json"}
 export default class Common{
     constructor(){
         this.$usernameHeader=()=>$(`//label[text()="Username"]`)
-        
     }
 
     /**
@@ -10,22 +9,22 @@ export default class Common{
      */
     async launchUrl(){
         await browser.maximizeWindow()
-        await browser.url("https://web-edmaster-test-wtus-ui-01.azurewebsites.net")
-        await this.$usernameHeader().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Header is still not displayed"})
+        await browser.url("https://web-edmaster-test-wtus-ui-01.azurewebsites.net/")
+        await this.$usernameHeader().waitForDisplayed({timeout:data.timeout,timeoutMsg:"Header still not displayed"})
     }
 
     /**
-     * common method for button clicks
+     * common method for button clicks 
      * @param {locator} locator 
      */
     async clickButton(locator){
         await locator.waitForDisplayed({timeout:data.timeout,timeoutMsg:"Button still not displayed"})
-        // await locator.waitForClickable({timeout:data.timeout,timeoutMsg:"Button still not clicked"})
+        // await locator.scrollIntoView()
         await locator.click()
     }
 
     /**
-     * common method to get the dropdown list items
+     * method to validate the dropdown list items
      * @param {locator} locator 
      * @returns array
      */
@@ -36,6 +35,6 @@ export default class Common{
             await item.waitForDisplayed({timeout:data.timeout,timeoutMsg:"List item is still not displayed"})
             list.push(await item.getText())
         }
-        return list      
+        return list
     }
 }
