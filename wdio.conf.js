@@ -21,7 +21,7 @@ export const config = {
     // of the config file unless it's absolute.
     //
     specs: [
-        './test/specs/edWiseRe.spec.js'
+        './test/specs/edWiseTest.spec.js'
     ],
     // Patterns to exclude.
     exclude: [

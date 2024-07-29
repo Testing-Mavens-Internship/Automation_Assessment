@@ -11,11 +11,8 @@
 
     "dropDownHeader":["Education Organization","Category","Effective Date"],
 
-    "reasonToChange":"Nikhil-09876543456789"
+    "reasonToChange":"Nikhil-09876543456789",
 
-
-
-
-    
+    "dropDownValues":["Future","Elementary/Secondary School","Alternative","Face-to-face instruction","Missing","Not State Accredited"]
 
 }
